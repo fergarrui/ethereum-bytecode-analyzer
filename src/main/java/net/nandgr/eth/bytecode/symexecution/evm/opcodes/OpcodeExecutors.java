@@ -1,0 +1,157 @@
+package net.nandgr.eth.bytecode.symexecution.evm.opcodes;
+
+import net.nandgr.eth.Opcode;
+import net.nandgr.eth.Opcodes;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class OpcodeExecutors {
+
+    private static Map<Opcodes, OpcodeExecutor> executors = new HashMap<>();
+
+    static {
+        executors.put(Opcodes.UNKNOWN, new Nop());
+        executors.put(Opcodes.STOP , new Stop());
+        executors.put(Opcodes.ADD , new Add());
+        executors.put(Opcodes.MUL , new Nop());
+        executors.put(Opcodes.SUB , new Sub());
+        executors.put(Opcodes.DIV , new Div());
+        executors.put(Opcodes.SDIV , new Nop());
+        executors.put(Opcodes.MOD , new Nop());
+        executors.put(Opcodes.SMOD , new Nop());
+        executors.put(Opcodes.ADDMOD , new Nop());
+        executors.put(Opcodes.MULMOD , new Nop());
+        executors.put(Opcodes.EXP , new Nop());
+        executors.put(Opcodes.SIGNEXTEND , new Nop());
+        executors.put(Opcodes.LT , new LT());
+        executors.put(Opcodes.GT , new Nop());
+        executors.put(Opcodes.SLT , new Nop());
+        executors.put(Opcodes.SGT , new Nop());
+        executors.put(Opcodes.EQ , new EQ());
+        executors.put(Opcodes.ISZERO , new IsZero());
+        executors.put(Opcodes.AND , new And());
+        executors.put(Opcodes.OR , new Or());
+        executors.put(Opcodes.XOR , new Xor());
+        executors.put(Opcodes.NOT , new Nop());
+        executors.put(Opcodes.BYTE , new Nop());
+        executors.put(Opcodes.SHA3 , new Sha3());
+        executors.put(Opcodes.ADDRESS , new Nop());
+        executors.put(Opcodes.BALANCE , new Nop());
+        executors.put(Opcodes.ORIGIN , new Nop());
+        executors.put(Opcodes.CALLER , new Nop());
+        executors.put(Opcodes.CALLVALUE , new CallValue());
+        executors.put(Opcodes.CALLDATALOAD , new CallDataLoad());
+        executors.put(Opcodes.CALLDATASIZE , new CallDataSize());
+        executors.put(Opcodes.CALLDATACOPY , new Nop());
+        executors.put(Opcodes.CODESIZE , new Nop());
+        executors.put(Opcodes.CODECOPY , new Nop());
+        executors.put(Opcodes.GASPRICE , new Nop());
+        executors.put(Opcodes.EXTCODESIZE , new Nop());
+        executors.put(Opcodes.EXTCODECOPY , new Nop());
+        executors.put(Opcodes.BLOCKHASH , new Nop());
+        executors.put(Opcodes.COINBASE , new Nop());
+        executors.put(Opcodes.TIMESTAMP , new Nop());
+        executors.put(Opcodes.NUMBER , new Nop());
+        executors.put(Opcodes.DIFFICULTY , new Nop());
+        executors.put(Opcodes.GASLIMIT , new Nop());
+        executors.put(Opcodes.POP , new Pop());
+        executors.put(Opcodes.MLOAD , new Mload());
+        executors.put(Opcodes.MSTORE , new MStore());
+        executors.put(Opcodes.MSTORE8 , new Nop());
+        executors.put(Opcodes.SLOAD , new SLoad());
+        executors.put(Opcodes.SSTORE , new SStore());
+        executors.put(Opcodes.JUMP , new Jump());
+        executors.put(Opcodes.JUMPI , new JumpI());
+        executors.put(Opcodes.PC , new Nop());
+        executors.put(Opcodes.MSIZE , new Nop());
+        executors.put(Opcodes.GAS , new Nop());
+        executors.put(Opcodes.JUMPDEST , new Nop());
+        executors.put(Opcodes.PUSH1 , new Push());
+        executors.put(Opcodes.PUSH2 , new Push());
+        executors.put(Opcodes.PUSH3 , new Push());
+        executors.put(Opcodes.PUSH3 , new Push());
+        executors.put(Opcodes.PUSH4 , new Push());
+        executors.put(Opcodes.PUSH5 , new Push());
+        executors.put(Opcodes.PUSH6 , new Push());
+        executors.put(Opcodes.PUSH7 , new Push());
+        executors.put(Opcodes.PUSH8 , new Push());
+        executors.put(Opcodes.PUSH9 , new Push());
+        executors.put(Opcodes.PUSH10 , new Push());
+        executors.put(Opcodes.PUSH11 , new Push());
+        executors.put(Opcodes.PUSH12 , new Push());
+        executors.put(Opcodes.PUSH13 , new Push());
+        executors.put(Opcodes.PUSH14 , new Push());
+        executors.put(Opcodes.PUSH15 , new Push());
+        executors.put(Opcodes.PUSH16 , new Push());
+        executors.put(Opcodes.PUSH17 , new Push());
+        executors.put(Opcodes.PUSH18 , new Push());
+        executors.put(Opcodes.PUSH19 , new Push());
+        executors.put(Opcodes.PUSH20 , new Push());
+        executors.put(Opcodes.PUSH21 , new Push());
+        executors.put(Opcodes.PUSH22 , new Push());
+        executors.put(Opcodes.PUSH23 , new Push());
+        executors.put(Opcodes.PUSH24 , new Push());
+        executors.put(Opcodes.PUSH25 , new Push());
+        executors.put(Opcodes.PUSH26 , new Push());
+        executors.put(Opcodes.PUSH27 , new Push());
+        executors.put(Opcodes.PUSH28 , new Push());
+        executors.put(Opcodes.PUSH29 , new Push());
+        executors.put(Opcodes.PUSH30 , new Push());
+        executors.put(Opcodes.PUSH31 , new Push());
+        executors.put(Opcodes.PUSH32 , new Push());
+        executors.put(Opcodes.DUP1 , new Dup());
+        executors.put(Opcodes.DUP2 , new Dup());
+        executors.put(Opcodes.DUP3 , new Dup());
+        executors.put(Opcodes.DUP4 , new Dup());
+        executors.put(Opcodes.DUP5 , new Dup());
+        executors.put(Opcodes.DUP6 , new Dup());
+        executors.put(Opcodes.DUP7 , new Dup());
+        executors.put(Opcodes.DUP8 , new Dup());
+        executors.put(Opcodes.DUP9 , new Dup());
+        executors.put(Opcodes.DUP10 , new Dup());
+        executors.put(Opcodes.DUP11 , new Dup());
+        executors.put(Opcodes.DUP12 , new Dup());
+        executors.put(Opcodes.DUP13 , new Dup());
+        executors.put(Opcodes.DUP14 , new Dup());
+        executors.put(Opcodes.DUP15 , new Dup());
+        executors.put(Opcodes.DUP16 , new Dup());
+        executors.put(Opcodes.SWAP1 , new Swap());
+        executors.put(Opcodes.SWAP2 , new Swap());
+        executors.put(Opcodes.SWAP3 , new Swap());
+        executors.put(Opcodes.SWAP4 , new Swap());
+        executors.put(Opcodes.SWAP5 , new Swap());
+        executors.put(Opcodes.SWAP6 , new Swap());
+        executors.put(Opcodes.SWAP7 , new Swap());
+        executors.put(Opcodes.SWAP8 , new Swap());
+        executors.put(Opcodes.SWAP9 , new Swap());
+        executors.put(Opcodes.SWAP10 , new Swap());
+        executors.put(Opcodes.SWAP11 , new Swap());
+        executors.put(Opcodes.SWAP12 , new Swap());
+        executors.put(Opcodes.SWAP13 , new Swap());
+        executors.put(Opcodes.SWAP14 , new Swap());
+        executors.put(Opcodes.SWAP15 , new Swap());
+        executors.put(Opcodes.SWAP16 , new Swap());
+        executors.put(Opcodes.LOG0 , new Nop());
+        executors.put(Opcodes.LOG1 , new Nop());
+        executors.put(Opcodes.LOG2 , new Nop());
+        executors.put(Opcodes.LOG3 , new Nop());
+        executors.put(Opcodes.LOG4 , new Nop());
+        executors.put(Opcodes.CREATE , new Nop());
+        executors.put(Opcodes.CALL , new Nop());
+        executors.put(Opcodes.CALLCODE , new Nop());
+        executors.put(Opcodes.RETURN , new Nop());
+        executors.put(Opcodes.DELEGATECALL , new Nop());
+        executors.put(Opcodes.STATICCALL , new Nop());
+        executors.put(Opcodes.REVERT , new Revert());
+        executors.put(Opcodes.INVALID , new Nop());
+        executors.put(Opcodes.SELFDESTRUCT , new Nop());
+    }
+
+    public static OpcodeExecutor findExecutor(Opcode opcode) {
+        if (!executors.containsKey(opcode.getOpcode())) {
+            throw new IllegalArgumentException("Opcode executor not found: " + opcode);
+        }
+        return executors.get(opcode.getOpcode());
+    }
+}
