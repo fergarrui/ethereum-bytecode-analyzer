@@ -14,7 +14,7 @@ public class OpcodeExecutors {
         executors.put(Opcodes.UNKNOWN, new Nop());
         executors.put(Opcodes.STOP , new Stop());
         executors.put(Opcodes.ADD , new Add());
-        executors.put(Opcodes.MUL , new Nop());
+        executors.put(Opcodes.MUL , new Mul());
         executors.put(Opcodes.SUB , new Sub());
         executors.put(Opcodes.DIV , new Div());
         executors.put(Opcodes.SDIV , new Nop());

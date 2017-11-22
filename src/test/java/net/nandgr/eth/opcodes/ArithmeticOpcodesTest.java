@@ -15,7 +15,7 @@ import java.util.Stack;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MathsOpcodesTest extends AbstractOpcodesTest {
+public class ArithmeticOpcodesTest extends AbstractOpcodesTest {
 
     @Test
     public void test_add() throws Exception {
@@ -137,5 +137,21 @@ public class MathsOpcodesTest extends AbstractOpcodesTest {
         EVMStack stack = evmState.getStack();
         assertTrue(stack.size() == 1);
         assertEquals(5, stack.pop().getIntData());
+    }
+
+    @Test
+    public void test_mul() throws Exception {
+        BytecodeChunk chunk = createChunk(0,
+                new Opcode(Opcodes.PUSH1, BigInteger.valueOf(4)),
+                new Opcode(Opcodes.PUSH1, BigInteger.valueOf(2)),
+                new Opcode(Opcodes.MUL, null),
+                new Opcode(Opcodes.STOP, null)
+        );
+        EVMState evmState = symExecute(new HashMap<Integer, BytecodeChunk>() {{
+            put(0, chunk);
+        }});
+        EVMStack stack = evmState.getStack();
+        assertTrue(stack.size() == 1);
+        assertEquals(8, stack.pop().getIntData());
     }
 }
