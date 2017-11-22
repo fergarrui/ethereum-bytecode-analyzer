@@ -17,8 +17,11 @@ public class SLoad implements OpcodeExecutor {
         key.getTrace().addChild(traceTree);
 
         TraceableWord value = storage.get(key);
-        value.getTrace().addChild(traceTree);
-
+        if (value != null) {
+            value.getTrace().addChild(traceTree);
+        } else {
+            value = new TraceableWord(new byte[0], traceTree);
+        }
         stack.push(value);
     }
 }

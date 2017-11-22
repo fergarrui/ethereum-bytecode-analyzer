@@ -44,6 +44,10 @@ public class BytecodeChunk {
         this.opcodes = opcodes;
     }
 
+    public boolean hasEmptyRelations() {
+        return getBranchA() == null && getBranchB() == null;
+    }
+
     @Override
     public String toString() {
         return "BytecodeChunk{" +

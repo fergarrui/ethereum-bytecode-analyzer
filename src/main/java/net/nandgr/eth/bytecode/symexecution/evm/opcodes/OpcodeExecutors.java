@@ -140,7 +140,7 @@ public class OpcodeExecutors {
         executors.put(Opcodes.CREATE , new Nop());
         executors.put(Opcodes.CALL , new Nop());
         executors.put(Opcodes.CALLCODE , new Nop());
-        executors.put(Opcodes.RETURN , new Nop());
+        executors.put(Opcodes.RETURN , new Return());
         executors.put(Opcodes.DELEGATECALL , new Nop());
         executors.put(Opcodes.STATICCALL , new Nop());
         executors.put(Opcodes.REVERT , new Revert());

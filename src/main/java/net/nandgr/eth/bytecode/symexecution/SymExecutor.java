@@ -14,12 +14,10 @@ import java.util.Map;
 public class SymExecutor {
 
     private static final Logger logger = LoggerFactory.getLogger(SymExecutor.class);
-    private final Map<Integer, BytecodeChunk> chunks;
     private final EVMState state;
 
     public SymExecutor(Map<Integer, BytecodeChunk> chunks, EVMEnvironment evmEnvironment) {
-        this.chunks = chunks;
-        state = new EVMState(evmEnvironment);
+        state = new EVMState(chunks, evmEnvironment);
     }
 
     public EVMState getState() {
@@ -28,24 +26,24 @@ public class SymExecutor {
 
     public void execute() throws EVMException {
 
-        if (chunks.isEmpty()) {
+        if (state.getChunks().isEmpty()) {
             String message = "Provided bytecode chunks empty";
             logger.error(message);
             throw new IllegalArgumentException(message);
         }
 
         int chunksOffset = 0;
-        BytecodeChunk bytecodeChunk = chunks.get(chunksOffset);
+        BytecodeChunk bytecodeChunk = state.getChunks().get(chunksOffset);
 
         while (state.isRunning()) {
             logger.info("SymExecutor loops");
             int pc = state.getPc();
             if (pc != chunksOffset) {
-                if(!chunks.containsKey(pc)) {
+                if(!state.getChunks().containsKey(pc)) {
                     logger.error("Program counter: {} does not match with any existing chunk", pc);
                     throw new EVMException("Program counter " + pc + " does not match with any existing chunk");
                 }
-                bytecodeChunk = chunks.get(pc);
+                bytecodeChunk = state.getChunks().get(pc);
                 chunksOffset = pc;
             } // else : machine should be stopped
             for (Opcode opcode : bytecodeChunk.getOpcodes()) {

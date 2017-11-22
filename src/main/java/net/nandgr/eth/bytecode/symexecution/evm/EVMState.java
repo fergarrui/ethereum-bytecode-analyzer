@@ -1,5 +1,6 @@
 package net.nandgr.eth.bytecode.symexecution.evm;
 
+import net.nandgr.eth.bytecode.beans.BytecodeChunk;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -7,6 +8,7 @@ import java.util.*;
 
 public class EVMState {
 
+    private final Map<Integer, BytecodeChunk> chunks;
     private boolean isRunning = true;
     // This program counter just points to the chunk offset being executed
     private int pc = 0;
@@ -15,9 +17,15 @@ public class EVMState {
     private final EVMStorage storage = new EVMStorage();
     private final EVMEnvironment evmEnvironment;
 
-    public EVMState(EVMEnvironment evmEnvironment) {
+    public EVMState(Map<Integer, BytecodeChunk> chunks, EVMEnvironment evmEnvironment) {
+        this.chunks = chunks;
         this.evmEnvironment = evmEnvironment;
     }
+
+    public Map<Integer, BytecodeChunk> getChunks() {
+        return chunks;
+    }
+
     // TODO Logs
     private Object logs;
 
@@ -51,6 +59,11 @@ public class EVMState {
 
     public void stop() {
         isRunning = false;
+    }
+
+    public void addRelation(BytecodeChunk activeChunk, BytecodeChunk branchA, BytecodeChunk branchB) {
+        activeChunk.setBranchA(branchA);
+        activeChunk.setBranchB(branchB);
     }
 
     public String printEVMState() {
