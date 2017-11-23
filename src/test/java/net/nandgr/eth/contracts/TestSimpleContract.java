@@ -84,6 +84,35 @@ public class TestSimpleContract {
         Assert.assertTrue(storageContent == null);
     }
 
+    /*
+    pragma solidity ^0.4.18;
+
+    contract Map {
+
+        uint n;
+        mapping(uint => string) m1;
+
+        function getN() public view returns (uint) {
+            return n;
+        }
+        function setN(uint num) public {
+            n = num;
+        }
+
+        function addM(uint num, string s) public {
+            m1[num] = s;
+        }
+
+        function getM(uint num) public view returns (string) {
+            return m1[num];
+        }
+
+        function() payable public {
+            n = 1;
+        }
+    }
+     */
+
     @Test
     @Ignore
     public void test_call_addM() throws Exception {

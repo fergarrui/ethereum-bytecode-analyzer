@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Map;
 
-public class SymExecutor {
+public class SymExecutor implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(SymExecutor.class);
     private final EVMState state;
@@ -22,6 +22,11 @@ public class SymExecutor {
 
     public EVMState getState() {
         return state;
+    }
+
+    @Override
+    public void run() {
+        execute();
     }
 
     public void execute() throws EVMException {
