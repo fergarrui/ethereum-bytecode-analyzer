@@ -16,7 +16,7 @@ public class CallValue implements OpcodeExecutor {
         BigInteger callValue = state.getEvmEnvironment().getCallValue();
         EVMStack stack = state.getStack();
 
-        TraceableWord traceableWord = new TraceableWord(callValue.toByteArray(), new TraceTree<>(opcode));
+        TraceableWord traceableWord = new TraceableWord(callValue.toByteArray(), new TraceTree(opcode));
         stack.push(traceableWord);
     }
 }

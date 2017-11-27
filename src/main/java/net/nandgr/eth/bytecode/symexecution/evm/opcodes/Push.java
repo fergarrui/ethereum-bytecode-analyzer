@@ -13,7 +13,7 @@ public class Push implements OpcodeExecutor {
     public void execute(EVMState state, Opcode opcode) throws EVMException {
         BigInteger parameter = opcode.getParameter();
 
-        TraceableWord traceableWord = new TraceableWord(parameter.toByteArray(), new TraceTree<>(opcode));
+        TraceableWord traceableWord = new TraceableWord(parameter.toByteArray(), new TraceTree(opcode));
         state.getStack().push(traceableWord);
     }
 }

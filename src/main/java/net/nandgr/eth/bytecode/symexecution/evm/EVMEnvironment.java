@@ -27,7 +27,25 @@ public class EVMEnvironment {
     public String toString() {
         return "EVMEnvironment{" +
                 "callData=" + callData +
+                ", callValue=" + callValue +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EVMEnvironment that = (EVMEnvironment) o;
+        if (callData != null ? !callData.equals(that.callData) : that.callData != null) return false;
+        return callValue != null ? callValue.equals(that.callValue) : that.callValue == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = callData != null ? callData.hashCode() : 0;
+        result = 31 * result + (callValue != null ? callValue.hashCode() : 0);
+        return result;
     }
 
     public static class EVMEnvironmentBuilder {

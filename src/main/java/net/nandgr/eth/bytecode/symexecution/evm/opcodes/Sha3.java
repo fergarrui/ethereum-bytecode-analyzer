@@ -22,12 +22,12 @@ public class Sha3 implements OpcodeExecutor {
             throw new UnsupportedOperationException("Length that is not word size is not supported at the moment");
         }
 
-        TraceTree<Opcode> traceTree = new TraceTree<>(opcode);
+        TraceTree traceTree = new TraceTree(opcode);
         traceTree.addChild(memoryIndexWord.getTrace());
         traceTree.addChild(lengthWord.getTrace());
-        TraceTree<Opcode> traceMemoryIndex = memoryIndexWord.getTrace();
+        TraceTree traceMemoryIndex = memoryIndexWord.getTrace();
         traceMemoryIndex.addChild(traceTree);
-        TraceTree<Opcode> traceMemoryLength = lengthWord.getTrace();
+        TraceTree traceMemoryLength = lengthWord.getTrace();
         traceMemoryLength.addChild(traceTree);
 
         int numberOfWords = length / TraceableWord.WORD_SIZE;

@@ -14,7 +14,7 @@ public class CallDataSize implements OpcodeExecutor {
     public void execute(EVMState state, Opcode opcode) throws EVMException {
         List<Byte> callData = state.getEvmEnvironment().getCallData();
         int callDataSize = callData.size();
-        TraceableWord traceableWord = new TraceableWord(BigInteger.valueOf(callDataSize).toByteArray(), new TraceTree<>(opcode));
+        TraceableWord traceableWord = new TraceableWord(BigInteger.valueOf(callDataSize).toByteArray(), new TraceTree(opcode));
         state.getStack().push(traceableWord);
     }
 }

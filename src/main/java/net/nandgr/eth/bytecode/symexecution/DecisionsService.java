@@ -1,11 +1,11 @@
 package net.nandgr.eth.bytecode.symexecution;
 
+import net.nandgr.eth.bytecode.symexecution.evm.EVMEnvironment;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public enum DecisionsService {
-
-    INSTANCE;
+public class DecisionsService {
 
     private List<Subscriber> subscribers = new ArrayList<>();
 
@@ -13,9 +13,9 @@ public enum DecisionsService {
         this.subscribers.add(subscriber);
     }
 
-    public void addDecision(Decision decision) {
+    public void addDecision(Decision decision, EVMEnvironment evmEnvironment) {
         for (Subscriber subscriber : subscribers) {
-            subscriber.inform(decision);
+            subscriber.inform(decision, evmEnvironment);
         }
     }
 }

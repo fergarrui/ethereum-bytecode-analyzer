@@ -23,9 +23,9 @@ public class MStore implements OpcodeExecutor {
         // the role in the execution could be saved, e.g.
         // - was used for the index
         // - was used to store it in memory
-        TraceTree<Opcode> trace1 = memoryIndex.getTrace();
-        TraceTree<Opcode> trace2 = memoryContent.getTrace();
-        TraceTree<Opcode> traceTree = new TraceTree<>(opcode);
+        TraceTree trace1 = memoryIndex.getTrace();
+        TraceTree trace2 = memoryContent.getTrace();
+        TraceTree traceTree = new TraceTree(opcode);
         trace1.addChild(traceTree);
         trace2.addChild(traceTree);
 

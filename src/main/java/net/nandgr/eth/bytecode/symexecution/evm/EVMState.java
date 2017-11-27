@@ -1,6 +1,7 @@
 package net.nandgr.eth.bytecode.symexecution.evm;
 
 import net.nandgr.eth.bytecode.beans.BytecodeChunk;
+import net.nandgr.eth.bytecode.symexecution.DecisionsService;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -16,10 +17,12 @@ public class EVMState {
     private final EVMMemory memory = new EVMMemory();
     private final EVMStorage storage = new EVMStorage();
     private final EVMEnvironment evmEnvironment;
+    private final DecisionsService decisionsService;
 
-    public EVMState(Map<Integer, BytecodeChunk> chunks, EVMEnvironment evmEnvironment) {
+    public EVMState(Map<Integer, BytecodeChunk> chunks, EVMEnvironment evmEnvironment, DecisionsService decisionsService) {
         this.chunks = chunks;
         this.evmEnvironment = evmEnvironment;
+        this.decisionsService = decisionsService;
     }
 
     public Map<Integer, BytecodeChunk> getChunks() {
@@ -51,6 +54,10 @@ public class EVMState {
 
     public EVMEnvironment getEvmEnvironment() {
         return evmEnvironment;
+    }
+
+    public DecisionsService getDecisionsService() {
+        return decisionsService;
     }
 
     public boolean isRunning() {

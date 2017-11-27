@@ -17,8 +17,8 @@ public class IsZero implements OpcodeExecutor {
         EVMStack stack = state.getStack();
         TraceableWord traceableWord0 = stack.pop();
 
-        TraceTree<Opcode> trace1 = traceableWord0.getTrace();
-        TraceTree<Opcode> traceTree = new TraceTree<>(opcode);
+        TraceTree trace1 = traceableWord0.getTrace();
+        TraceTree traceTree = new TraceTree(opcode);
         traceTree.addChild(trace1);
 
         BigInteger element0 = new BigInteger(traceableWord0.getBytes());

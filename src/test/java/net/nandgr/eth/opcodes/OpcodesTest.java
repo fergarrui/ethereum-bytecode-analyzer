@@ -1,5 +1,6 @@
 package net.nandgr.eth.opcodes;
 
+import net.nandgr.eth.AbstractOpcodesTest;
 import net.nandgr.eth.Opcode;
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.beans.BytecodeChunk;

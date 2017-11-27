@@ -62,8 +62,8 @@ public class CFGCreatorDefault implements CFGCreator {
                 List<Opcode> chunkOpcodes = opcodes.subList(startIndex, i + 1);
                 bytecodeChunk.setOpcodes(chunkOpcodes);
                 if (!chunkOpcodes.isEmpty()) {
-                    Opcode firstOpcode = chunkOpcodes.get(0);
-                    chunks.put(firstOpcode.getOffset(), bytecodeChunk);
+                    Opcode jumpDest = getJumpDest(chunkOpcodes);
+                    chunks.put(jumpDest.getOffset(), bytecodeChunk);
                 }
                 startIndex = i + 1;
             }
@@ -71,9 +71,17 @@ public class CFGCreatorDefault implements CFGCreator {
         return chunks;
     }
 
+    private Opcode getJumpDest(List<Opcode> chunkOpcodes) {
+        for (Opcode chunkOpcode : chunkOpcodes) {
+            if (chunkOpcode.getOpcode().equals(Opcodes.JUMPDEST)) {
+                return chunkOpcode;
+            }
+        }
+        return chunkOpcodes.get(0);
+    }
+
     @Override
     public void createRelations(Map<Integer, BytecodeChunk> chunks) {
-
         for (Map.Entry<Integer, BytecodeChunk> chunkEntry : chunks.entrySet()) {
             BytecodeChunk chunk = chunkEntry.getValue();
             List<Opcode> opcodes = chunk.getOpcodes();
@@ -81,7 +89,7 @@ public class CFGCreatorDefault implements CFGCreator {
             Opcodes lastOpcodeDefinition = lastOpcode.getOpcode();
             if (lastOpcodeDefinition.equals(Opcodes.JUMPI) || lastOpcodeDefinition.equals(Opcodes.JUMP)) {
                 Opcode previousOpcode = opcodes.get(opcodes.size() -2);
-                if (previousOpcode.getOpcode().name().startsWith("PUSH")) {
+                if (Opcodes.isPush(previousOpcode.getOpcode())) {
                     BigInteger jumpLocation = previousOpcode.getParameter();
                     BytecodeChunk jumpToChunk = chunks.get(jumpLocation.intValue());
                     chunk.setBranchA(jumpToChunk);
@@ -90,9 +98,6 @@ public class CFGCreatorDefault implements CFGCreator {
                     if (lastOpcodeDefinition.equals(Opcodes.JUMPI) && chunks.containsKey(nextKey)) {
                         chunk.setBranchB(chunks.get(nextKey));
                     }
-                } else {
-                    // TODO Tracking the stack status and values would give us a more accurate/understandable location in this case
-
                 }
             }
         }

@@ -1,6 +1,7 @@
 package net.nandgr.eth.bytecode.symexecution.evm.opcodes;
 
 import net.nandgr.eth.Opcode;
+import net.nandgr.eth.bytecode.symexecution.Decision;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMStack;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
@@ -14,12 +15,13 @@ public class JumpI implements OpcodeExecutor {
         EVMStack stack = state.getStack();
         TraceableWord jumpTo = stack.pop();
         TraceableWord jumpIf = stack.pop();
-        jumpTo.getTrace().addChild(opcode);
-        jumpIf.getTrace().addChild(opcode);
+//        jumpTo.getTrace().addChild(opcode);
+//        jumpIf.getTrace().addChild(opcode);
         if (jumpIf.getIntData() != 0) {
             state.setPc(jumpTo.getIntData());
         } else {
             state.setPc(opcode.getOffset() + 1);
         }
+        state.getDecisionsService().addDecision(new Decision(jumpIf), state.getEvmEnvironment());
     }
 }

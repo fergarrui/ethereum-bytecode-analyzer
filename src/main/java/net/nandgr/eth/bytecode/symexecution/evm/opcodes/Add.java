@@ -18,9 +18,9 @@ public class Add implements OpcodeExecutor {
         TraceableWord traceableWord0 = stack.pop();
         TraceableWord traceableWord1 = stack.pop();
 
-        TraceTree<Opcode> trace1 = traceableWord0.getTrace();
-        TraceTree<Opcode> trace2 = traceableWord1.getTrace();
-        TraceTree<Opcode> traceTree = new TraceTree<>(opcode);
+        TraceTree trace1 = traceableWord0.getTrace();
+        TraceTree trace2 = traceableWord1.getTrace();
+        TraceTree traceTree = new TraceTree(opcode);
         traceTree.addChild(trace1);
         traceTree.addChild(trace2);
 

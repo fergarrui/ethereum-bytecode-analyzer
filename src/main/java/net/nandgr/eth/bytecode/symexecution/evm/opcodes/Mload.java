@@ -17,8 +17,8 @@ public class Mload implements OpcodeExecutor {
         Map<Integer, TraceableWord> memory = state.getMemory().getMemory();
         TraceableWord memoryIndex = stack.pop();
 
-        TraceTree<Opcode> trace = memoryIndex.getTrace();
-        TraceTree<Opcode> traceTree = new TraceTree<>(opcode);
+        TraceTree trace = memoryIndex.getTrace();
+        TraceTree traceTree = new TraceTree(opcode);
         trace.addChild(traceTree);
 
         TraceableWord traceableWord = memory.get(memoryIndex.getIntData());

@@ -5,6 +5,7 @@ import net.nandgr.eth.bytecode.beans.BytecodeChunk;
 import net.nandgr.eth.bytecode.beans.ContractBytecode;
 import net.nandgr.eth.bytecode.cfg.CFGCreator;
 import net.nandgr.eth.bytecode.cfg.CFGCreatorDefault;
+import net.nandgr.eth.bytecode.symexecution.DecisionsService;
 import net.nandgr.eth.bytecode.symexecution.SymExecutor;
 import net.nandgr.eth.bytecode.symexecution.evm.*;
 import net.nandgr.eth.exceptions.EVMException;
@@ -142,7 +143,7 @@ public class TestSimpleContract {
         ContractBytecode contractBytecode = cfgCreator.createContractBytecode(disassembler.getOpcodes());
         Map<Integer, BytecodeChunk> functionsChunks = contractBytecode.getFunctionsSection().getChunks();
         cfgCreator.createRelations(functionsChunks);
-        SymExecutor symExecutor = new SymExecutor(functionsChunks, evmEnvironment);
+        SymExecutor symExecutor = new SymExecutor(functionsChunks, evmEnvironment, new DecisionsService());
         symExecutor.execute();
         return symExecutor.getState();
     }

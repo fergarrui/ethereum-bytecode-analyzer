@@ -32,7 +32,7 @@ public class CallDataLoad implements OpcodeExecutor {
             index++;
         }
 
-        TraceableWord word = new TraceableWord(bytes, new TraceTree<>(opcode));
+        TraceableWord word = new TraceableWord(bytes, new TraceTree(opcode));
         stack.push(word);
     }
 }

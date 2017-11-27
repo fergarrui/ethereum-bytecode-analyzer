@@ -14,7 +14,7 @@ public class SStore implements OpcodeExecutor {
         TraceableWord key = stack.pop();
         TraceableWord value = stack.pop();
 
-        TraceTree<Opcode> traceTree = new TraceTree<>(opcode);
+        TraceTree traceTree = new TraceTree(opcode);
         key.getTrace().addChild(traceTree);
         value.getTrace().addChild(traceTree);
 

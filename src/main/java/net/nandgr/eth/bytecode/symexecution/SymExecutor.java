@@ -9,28 +9,51 @@ import net.nandgr.eth.bytecode.symexecution.evm.opcodes.OpcodeExecutors;
 import net.nandgr.eth.exceptions.EVMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Map;
 
-public class SymExecutor implements Runnable {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+
+/**
+ * Executes in an isolated EVM the given bytecode.
+ * It records the execution of every opcode.
+ * Runs in a new thread.
+ */
+public class SymExecutor implements Callable<EVMState> {
 
     private static final Logger logger = LoggerFactory.getLogger(SymExecutor.class);
+    /**
+     * State of the EVM.
+     * Contains the stack, memory, storage, events, environment and chunks
+     */
     private final EVMState state;
+    /**
+     * Holds the opcodes that the program executed.
+     * Maybe some paths of the program won't be covered on this
+     * execution but are going to be covered in subsequents runs
+     * with different inputs/environment
+     */
+    private final List<Opcode> programExecution = new ArrayList<>();
 
-    public SymExecutor(Map<Integer, BytecodeChunk> chunks, EVMEnvironment evmEnvironment) {
-        state = new EVMState(chunks, evmEnvironment);
+    public SymExecutor(Map<Integer, BytecodeChunk> chunks, EVMEnvironment evmEnvironment, DecisionsService decisionsService) {
+        state = new EVMState(chunks, evmEnvironment, decisionsService);
     }
 
     public EVMState getState() {
         return state;
     }
 
-    @Override
-    public void run() {
-        execute();
+    public List<Opcode> getProgramExecution() {
+        return programExecution;
     }
 
-    public void execute() throws EVMException {
+    @Override
+    public EVMState call() throws EVMException {
+        return execute();
+    }
 
+    public EVMState execute() throws EVMException {
         if (state.getChunks().isEmpty()) {
             String message = "Provided bytecode chunks empty";
             logger.error(message);
@@ -54,9 +77,11 @@ public class SymExecutor implements Runnable {
             for (Opcode opcode : bytecodeChunk.getOpcodes()) {
                 OpcodeExecutor executor = OpcodeExecutors.findExecutor(opcode);
                 executor.execute(state, opcode);
+                programExecution.add(opcode);
                 logger.info("Executed opcode {} with {}", opcode, executor.getClass());
                 logger.debug("EVM State: {}", state.printEVMState());
             }
         }
+        return state;
     }
 }

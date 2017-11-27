@@ -1,14 +1,13 @@
 package net.nandgr.eth.opcodes;
 
+import net.nandgr.eth.AbstractOpcodesTest;
 import net.nandgr.eth.Opcode;
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.beans.BytecodeChunk;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMStack;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
-import net.nandgr.eth.bytecode.symexecution.evm.EVMStorage;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
 import java.util.HashMap;
