@@ -1,6 +1,7 @@
 package net.nandgr.eth.bytecode.symexecution.evm;
 
-import net.nandgr.eth.Opcode;
+import net.nandgr.eth.bytecode.symexecution.TraceTree;
+import net.nandgr.eth.bytecode.symexecution.Traceable;
 import net.nandgr.eth.exceptions.EVMException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -11,10 +12,18 @@ public class TraceableWord implements Traceable {
 
     public static final int WORD_SIZE = 32;
     private byte[] bytes = new byte[WORD_SIZE];
-    private final TraceTree trace;
+    private TraceTree trace;
 
     public TraceableWord(byte[] bytes, TraceTree trace) throws EVMException {
+        initBytes(bytes);
         this.trace = trace;
+    }
+
+    public TraceableWord(byte[] bytes) throws EVMException {
+        initBytes(bytes);
+    }
+
+    private void initBytes(byte[] bytes) throws EVMException {
         if(bytes.length > 32) {
             throw new EVMException("Trying to create a word bigger than 32 bytes");
         }
@@ -35,9 +44,12 @@ public class TraceableWord implements Traceable {
         return b;
     }
 
-
     public TraceTree getTrace() {
         return trace;
+    }
+
+    public void setTrace(TraceTree trace) {
+        this.trace = trace;
     }
 
     public int getIntData() {

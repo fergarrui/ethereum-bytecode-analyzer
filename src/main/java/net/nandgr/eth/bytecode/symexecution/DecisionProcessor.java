@@ -3,7 +3,6 @@ package net.nandgr.eth.bytecode.symexecution;
 import net.nandgr.eth.Opcode;
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMEnvironment;
-import net.nandgr.eth.bytecode.symexecution.evm.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.bytecode.symexecution.trace.EQTrace;
 import net.nandgr.eth.bytecode.symexecution.trace.IsZeroTrace;
@@ -30,6 +29,28 @@ class DecisionProcessor {
         opcodesInputs.add(Opcodes.CALLVALUE);
         opcodesInputs.add(Opcodes.CALLDATASIZE);
         opcodesInputs.add(Opcodes.CALLDATALOAD);
+        // ??
+        opcodesInputs.add(Opcodes.GAS);
+        //
+        opcodesInputs.add(Opcodes.ADDRESS);
+        opcodesInputs.add(Opcodes.BALANCE);
+        opcodesInputs.add(Opcodes.ORIGIN);
+        opcodesInputs.add(Opcodes.CALLER);
+        opcodesInputs.add(Opcodes.CALLVALUE);
+        opcodesInputs.add(Opcodes.CALLDATALOAD);
+        opcodesInputs.add(Opcodes.CALLDATASIZE);
+        opcodesInputs.add(Opcodes.CALLDATACOPY);
+        opcodesInputs.add(Opcodes.CODESIZE);
+        opcodesInputs.add(Opcodes.CODECOPY);
+        opcodesInputs.add(Opcodes.GASPRICE);
+        opcodesInputs.add(Opcodes.EXTCODESIZE);
+        opcodesInputs.add(Opcodes.EXTCODECOPY);
+        opcodesInputs.add(Opcodes.BLOCKHASH);
+        opcodesInputs.add(Opcodes.COINBASE);
+        opcodesInputs.add(Opcodes.TIMESTAMP);
+        opcodesInputs.add(Opcodes.NUMBER);
+        opcodesInputs.add(Opcodes.DIFFICULTY);
+        opcodesInputs.add(Opcodes.GASLIMIT);
     }
 
     EVMEnvironment buildEnvironmentFromDecision(Decision decision, EVMEnvironment environment) {
