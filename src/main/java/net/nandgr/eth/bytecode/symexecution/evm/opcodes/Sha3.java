@@ -1,9 +1,9 @@
 package net.nandgr.eth.bytecode.symexecution.evm.opcodes;
 
 import net.nandgr.eth.Opcode;
+import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMStack;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
-import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.ethereumjcrypto.HashUtil;
 import net.nandgr.eth.exceptions.EVMException;
@@ -27,8 +27,6 @@ public class Sha3 extends AbstractOpcode {
         int numberOfWords = length / TraceableWord.WORD_SIZE;
         byte[] bytesToHash = new byte[0];
         int memIndex = memoryIndexWord.getIntData();
-
-
 
         for (int i = 0; i < numberOfWords; i++) {
             TraceableWord traceableWord = memory.get(memIndex);
