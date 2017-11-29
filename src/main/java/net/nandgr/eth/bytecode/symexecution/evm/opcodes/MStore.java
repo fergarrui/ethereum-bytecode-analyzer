@@ -6,10 +6,12 @@ import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.exceptions.EVMException;
+import net.nandgr.eth.utils.Lists;
+
 import java.math.BigInteger;
 import java.util.Map;
 
-public class MStore implements OpcodeExecutor {
+public class MStore extends AbstractOpcode {
 
     @Override
     public void execute(EVMState state, Opcode opcode) throws EVMException {
@@ -24,7 +26,7 @@ public class MStore implements OpcodeExecutor {
         // - was used to store it in memory
         TraceTree trace1 = memoryIndex.getTrace();
         TraceTree trace2 = memoryContent.getTrace();
-        TraceTree traceTree = new TraceTree(opcode);
+        TraceTree traceTree = buildTraceTree(opcode, null, Lists.of(memoryIndex, memoryContent));
         trace1.addChild(traceTree);
         trace2.addChild(traceTree);
 

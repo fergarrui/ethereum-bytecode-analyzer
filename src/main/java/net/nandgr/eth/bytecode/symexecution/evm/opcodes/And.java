@@ -6,6 +6,7 @@ import net.nandgr.eth.bytecode.symexecution.evm.EVMStack;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.exceptions.EVMException;
+import net.nandgr.eth.utils.Lists;
 
 import java.math.BigInteger;
 
@@ -24,7 +25,7 @@ public class And extends AbstractOpcode {
         BigInteger element1 = new BigInteger(traceableWord1.getBytes());
         BigInteger result = element0.and(element1);
         TraceableWord traceableWord = new TraceableWord(result.toByteArray());
-        TraceTree traceTree = buildTraceTree(opcode, traceableWord0, traceableWord1, traceableWord);
+        TraceTree traceTree = buildTraceTree(opcode, traceableWord, Lists.of(traceableWord0, traceableWord1));
         traceTree.addChild(trace1);
         traceTree.addChild(trace2);
         traceableWord.setTrace(traceTree);

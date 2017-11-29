@@ -11,16 +11,14 @@ import net.nandgr.eth.utils.Lists;
 import java.math.BigInteger;
 import java.util.Collections;
 
-public class Push implements OpcodeExecutor {
+public class Push extends AbstractOpcode {
 
     @Override
     public void execute(EVMState state, Opcode opcode) throws EVMException {
         BigInteger parameter = opcode.getParameter();
         TraceableWord traceableWord = new TraceableWord(parameter.toByteArray());
 
-        SymbolicTransformation symbolicTransformation = new SymbolicTransformation(Collections.emptyList(), opcode, 0);
-        ExecutionTrace executionTrace = new ExecutionTrace(opcode, Collections.emptyList(), Lists.of(traceableWord), symbolicTransformation, false);
-        TraceTree traceTree = new TraceTree(executionTrace);
+        TraceTree traceTree = buildTraceTree(opcode, traceableWord, Collections.emptyList());
         traceableWord.setTrace(traceTree);
 
         state.getStack().push(traceableWord);

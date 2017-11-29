@@ -6,6 +6,7 @@ import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMStack;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
+import net.nandgr.eth.utils.Lists;
 
 public class Swap extends AbstractOpcode {
 
@@ -24,7 +25,7 @@ public class Swap extends AbstractOpcode {
         TraceableWord elemToSwap = stack.get(index);
         stack.insertElementAt(elem, index);
         stack.remove(index+1);
-        TraceTree traceTree = buildTraceTree(opcode, elem, elemToSwap);
+        TraceTree traceTree = buildTraceTree(opcode, elemToSwap, Lists.of(elem));
         elem.getTrace().addChild(traceTree);
         elemToSwap.getTrace().addChild(traceTree);
         stack.push(elemToSwap);

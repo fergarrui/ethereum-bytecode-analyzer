@@ -25,58 +25,18 @@ class DecisionProcessor {
         traceAnalyzers.put(Opcodes.ISZERO, new IsZeroTrace());
         traceAnalyzers.put(Opcodes.LT, new LTTrace());
         traceAnalyzers.put(Opcodes.EQ, new EQTrace());
-        // Inputs
-        opcodesInputs.add(Opcodes.CALLVALUE);
-        opcodesInputs.add(Opcodes.CALLDATASIZE);
-        opcodesInputs.add(Opcodes.CALLDATALOAD);
-        // ??
-        opcodesInputs.add(Opcodes.GAS);
-        //
-        opcodesInputs.add(Opcodes.ADDRESS);
-        opcodesInputs.add(Opcodes.BALANCE);
-        opcodesInputs.add(Opcodes.ORIGIN);
-        opcodesInputs.add(Opcodes.CALLER);
-        opcodesInputs.add(Opcodes.CALLVALUE);
-        opcodesInputs.add(Opcodes.CALLDATALOAD);
-        opcodesInputs.add(Opcodes.CALLDATASIZE);
-        opcodesInputs.add(Opcodes.CALLDATACOPY);
-        opcodesInputs.add(Opcodes.CODESIZE);
-        opcodesInputs.add(Opcodes.CODECOPY);
-        opcodesInputs.add(Opcodes.GASPRICE);
-        opcodesInputs.add(Opcodes.EXTCODESIZE);
-        opcodesInputs.add(Opcodes.EXTCODECOPY);
-        opcodesInputs.add(Opcodes.BLOCKHASH);
-        opcodesInputs.add(Opcodes.COINBASE);
-        opcodesInputs.add(Opcodes.TIMESTAMP);
-        opcodesInputs.add(Opcodes.NUMBER);
-        opcodesInputs.add(Opcodes.DIFFICULTY);
-        opcodesInputs.add(Opcodes.GASLIMIT);
     }
 
     EVMEnvironment buildEnvironmentFromDecision(Decision decision, EVMEnvironment environment) {
         TraceableWord conditionWord = decision.getConditionWord();
-        Opcode conditionElement = conditionWord.getTrace().getElement();
-        logger.info("Processing decision for " + conditionWord + ", " + conditionElement);
-        TraceAnalyzer traceAnalyzer = traceAnalyzers.get(conditionElement.getOpcode());
+        ExecutionTrace executionTrace = conditionWord.getTrace().getExecutionTrace();
+        logger.info("Processing decision for " + conditionWord + ", " + executionTrace);
+        TraceAnalyzer traceAnalyzer = traceAnalyzers.get(executionTrace.getOpcode());
         if (traceAnalyzer == null) {
-            logger.warn("Unknown condition opcode: " + conditionElement.getOpcode());
+            logger.warn("Unknown condition opcode: " + executionTrace.getOpcode());
             return null;
         }
-        List<TraceTree> inputs = findInputs(conditionWord.getTrace());
-        logger.info("XXXXX" + Arrays.toString(inputs.toArray()));
         return new EVMEnvironment.EVMEnvironmentBuilder()
                 .build();
-    }
-
-    private static List<TraceTree> findInputs(TraceTree word) {
-        List<TraceTree> inputs = new ArrayList<>();
-        for (TraceTree traceTree : word.getChildren()) {
-            Opcode element = traceTree.getElement();
-            if (opcodesInputs.contains(element.getOpcode())) {
-                inputs.add(traceTree);
-            }
-            inputs.addAll(findInputs(traceTree));
-        }
-        return inputs;
     }
 }

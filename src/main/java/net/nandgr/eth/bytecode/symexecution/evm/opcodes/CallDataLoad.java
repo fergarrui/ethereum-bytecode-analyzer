@@ -6,9 +6,11 @@ import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.exceptions.EVMException;
+import net.nandgr.eth.utils.Lists;
+
 import java.util.List;
 
-public class CallDataLoad implements OpcodeExecutor {
+public class CallDataLoad extends AbstractOpcode {
 
     @Override
     public void execute(EVMState state, Opcode opcode) throws EVMException {
@@ -16,9 +18,6 @@ public class CallDataLoad implements OpcodeExecutor {
         EVMStack stack = state.getStack();
 
         TraceableWord dataIndex = stack.pop();
-        dataIndex.getTrace().addChild(opcode);
-
-
 
         int index = dataIndex.getIntData();
         if(index > callData.size()) {
@@ -34,7 +33,10 @@ public class CallDataLoad implements OpcodeExecutor {
             index++;
         }
 
-        TraceableWord word = new TraceableWord(bytes, new TraceTree(opcode));
+        TraceableWord word = new TraceableWord(bytes);
+        TraceTree traceTree = buildTraceTree(opcode, word, Lists.of(dataIndex));
+        word.setTrace(traceTree);
+        dataIndex.getTrace().addChild(traceTree);
         stack.push(word);
     }
 }

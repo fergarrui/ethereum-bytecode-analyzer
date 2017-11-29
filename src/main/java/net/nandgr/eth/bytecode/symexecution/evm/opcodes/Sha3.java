@@ -7,6 +7,8 @@ import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.ethereumjcrypto.HashUtil;
 import net.nandgr.eth.exceptions.EVMException;
+import net.nandgr.eth.utils.Lists;
+
 import java.util.Map;
 
 public class Sha3 extends AbstractOpcode {
@@ -25,24 +27,25 @@ public class Sha3 extends AbstractOpcode {
         int numberOfWords = length / TraceableWord.WORD_SIZE;
         byte[] bytesToHash = new byte[0];
         int memIndex = memoryIndexWord.getIntData();
-        byte[] hashedBytes = HashUtil.sha3(bytesToHash);
-        TraceableWord hashedWord = new TraceableWord(hashedBytes);
 
-        TraceTree traceTree = buildTraceTree(opcode, memoryIndexWord, lengthWord, hashedWord);
-        traceTree.addChild(memoryIndexWord.getTrace());
-        traceTree.addChild(lengthWord.getTrace());
-        TraceTree traceMemoryIndex = memoryIndexWord.getTrace();
-        traceMemoryIndex.addChild(traceTree);
-        TraceTree traceMemoryLength = lengthWord.getTrace();
-        traceMemoryLength.addChild(traceTree);
+
+
         for (int i = 0; i < numberOfWords; i++) {
             TraceableWord traceableWord = memory.get(memIndex);
-            traceableWord.getTrace().addChild(traceTree);
-            traceTree.addChild(traceableWord.getTrace());
+            // TODO need to trace this ?
+//            traceableWord.getTrace().addChild(traceTree);
+//            traceTree.addChild(traceableWord.getTrace());
             byte[] bytes = traceableWord.getBytes32();
             bytesToHash = concatenate(bytesToHash, bytes);
             memIndex += TraceableWord.WORD_SIZE;
         }
+        byte[] hashedBytes = HashUtil.sha3(bytesToHash);
+        TraceableWord hashedWord = new TraceableWord(hashedBytes);
+        TraceTree traceTree = buildTraceTree(opcode, hashedWord, Lists.of(memoryIndexWord, lengthWord));
+        traceTree.addChild(memoryIndexWord.getTrace());
+        traceTree.addChild(lengthWord.getTrace());
+        memoryIndexWord.getTrace().addChild(traceTree);
+        lengthWord.getTrace().addChild(traceTree);
         hashedWord.setTrace(traceTree);
         stack.push(hashedWord);
     }
