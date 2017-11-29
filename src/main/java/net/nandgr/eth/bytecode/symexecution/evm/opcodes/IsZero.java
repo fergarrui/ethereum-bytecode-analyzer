@@ -9,7 +9,7 @@ import net.nandgr.eth.exceptions.EVMException;
 
 import java.math.BigInteger;
 
-public class IsZero implements OpcodeExecutor {
+public class IsZero extends AbstractOpcode {
 
     @Override
     public void execute(EVMState state, Opcode opcode) throws EVMException {
@@ -17,8 +17,6 @@ public class IsZero implements OpcodeExecutor {
         TraceableWord traceableWord0 = stack.pop();
 
         TraceTree trace1 = traceableWord0.getTrace();
-        TraceTree traceTree = new TraceTree(opcode);
-        traceTree.addChild(trace1);
 
         BigInteger element0 = new BigInteger(traceableWord0.getBytes());
 
@@ -26,7 +24,10 @@ public class IsZero implements OpcodeExecutor {
         if (element0.equals(BigInteger.valueOf(0))) {
             bytes[0] = 0x01;
         }
-        TraceableWord traceableWord = new TraceableWord(bytes, traceTree);
-        stack.push(traceableWord);
+        TraceableWord resultTraceableWord = new TraceableWord(bytes);
+        TraceTree traceTree = buildTraceTree(opcode, traceableWord0, resultTraceableWord);
+        traceTree.addChild(trace1);
+        resultTraceableWord.setTrace(traceTree);
+        stack.push(resultTraceableWord);
     }
 }

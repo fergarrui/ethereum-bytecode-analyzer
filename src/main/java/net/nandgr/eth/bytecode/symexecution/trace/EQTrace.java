@@ -6,7 +6,6 @@ import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.exceptions.TraceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 public class EQTrace implements TraceAnalyzer {
@@ -21,11 +20,9 @@ public class EQTrace implements TraceAnalyzer {
             logger.error(errorMessage);
             throw new TraceException(errorMessage);
         }
-
         TraceTree children0 = children.get(0);
         TraceTree children1 = children.get(1);
-
-return null;
-
+        // TODO -
+        return null;
     }
 }

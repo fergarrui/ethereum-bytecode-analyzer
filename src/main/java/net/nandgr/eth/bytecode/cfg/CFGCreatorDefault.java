@@ -18,7 +18,7 @@ public class CFGCreatorDefault implements CFGCreator {
             Opcodes.JUMP,
             Opcodes.STOP,
             Opcodes.REVERT,
-            Opcodes.RETURN // ????
+            Opcodes.RETURN
     ).collect(Collectors.toList());
 
     @Override

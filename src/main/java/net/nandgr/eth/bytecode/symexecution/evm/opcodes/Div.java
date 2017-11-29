@@ -9,7 +9,7 @@ import net.nandgr.eth.exceptions.EVMException;
 
 import java.math.BigInteger;
 
-public class Div implements OpcodeExecutor {
+public class Div extends AbstractOpcode {
 
     @Override
     public void execute(EVMState state, Opcode opcode) throws EVMException {
@@ -17,13 +17,6 @@ public class Div implements OpcodeExecutor {
         TraceableWord traceableWord0 = stack.pop();
         TraceableWord traceableWord1 = stack.pop();
 
-        TraceTree trace1 = traceableWord0.getTrace();
-        TraceTree trace2 = traceableWord1.getTrace();
-        TraceTree traceTree = new TraceTree(opcode);
-        traceTree.addChild(trace1);
-        traceTree.addChild(trace2);
-//        trace1.addChild(traceTree);
-//        trace2.addChild(traceTree);
 
         BigInteger element0 = new BigInteger(traceableWord0.getBytes());
         BigInteger element1 = new BigInteger(traceableWord1.getBytes());
@@ -34,7 +27,11 @@ public class Div implements OpcodeExecutor {
             result = element0.divide(element1);
         }
 
-        TraceableWord traceableWord = new TraceableWord(result.toByteArray(), traceTree);
-        stack.push(traceableWord);
+        TraceableWord resultTraceableWord = new TraceableWord(result.toByteArray());
+        TraceTree traceTree = buildTraceTree(opcode, traceableWord0, traceableWord1, resultTraceableWord);
+        traceTree.addChild(traceableWord0.getTrace());
+        traceTree.addChild(traceableWord1.getTrace());
+        resultTraceableWord.setTrace(traceTree);
+        stack.push(resultTraceableWord);
     }
 }

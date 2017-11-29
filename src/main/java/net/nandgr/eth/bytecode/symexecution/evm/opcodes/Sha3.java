@@ -9,7 +9,7 @@ import net.nandgr.eth.ethereumjcrypto.HashUtil;
 import net.nandgr.eth.exceptions.EVMException;
 import java.util.Map;
 
-public class Sha3 implements OpcodeExecutor {
+public class Sha3 extends AbstractOpcode {
 
     @Override
     public void execute(EVMState state, Opcode opcode) throws EVMException {
@@ -22,17 +22,19 @@ public class Sha3 implements OpcodeExecutor {
             throw new UnsupportedOperationException("Length that is not word size is not supported at the moment");
         }
 
-        TraceTree traceTree = new TraceTree(opcode);
+        int numberOfWords = length / TraceableWord.WORD_SIZE;
+        byte[] bytesToHash = new byte[0];
+        int memIndex = memoryIndexWord.getIntData();
+        byte[] hashedBytes = HashUtil.sha3(bytesToHash);
+        TraceableWord hashedWord = new TraceableWord(hashedBytes);
+
+        TraceTree traceTree = buildTraceTree(opcode, memoryIndexWord, lengthWord, hashedWord);
         traceTree.addChild(memoryIndexWord.getTrace());
         traceTree.addChild(lengthWord.getTrace());
         TraceTree traceMemoryIndex = memoryIndexWord.getTrace();
         traceMemoryIndex.addChild(traceTree);
         TraceTree traceMemoryLength = lengthWord.getTrace();
         traceMemoryLength.addChild(traceTree);
-
-        int numberOfWords = length / TraceableWord.WORD_SIZE;
-        byte[] bytesToHash = new byte[0];
-        int memIndex = memoryIndexWord.getIntData();
         for (int i = 0; i < numberOfWords; i++) {
             TraceableWord traceableWord = memory.get(memIndex);
             traceableWord.getTrace().addChild(traceTree);
@@ -41,8 +43,7 @@ public class Sha3 implements OpcodeExecutor {
             bytesToHash = concatenate(bytesToHash, bytes);
             memIndex += TraceableWord.WORD_SIZE;
         }
-        byte[] hashedBytes = HashUtil.sha3(bytesToHash);
-        TraceableWord hashedWord = new TraceableWord(hashedBytes, traceTree);
+        hashedWord.setTrace(traceTree);
         stack.push(hashedWord);
     }
 

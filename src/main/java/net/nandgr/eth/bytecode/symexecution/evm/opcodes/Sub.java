@@ -9,9 +9,9 @@ import net.nandgr.eth.exceptions.EVMException;
 
 import java.math.BigInteger;
 
-public class Sub implements OpcodeExecutor {
+public class Sub extends AbstractOpcode {
 
-    // TODO Search for negative numbers, etc
+    // TODO Consider underflow
     @Override
     public void execute(EVMState state, Opcode opcode) throws EVMException {
         EVMStack stack = state.getStack();
@@ -20,16 +20,17 @@ public class Sub implements OpcodeExecutor {
 
         TraceTree trace1 = traceableWord0.getTrace();
         TraceTree trace2 = traceableWord1.getTrace();
-        TraceTree traceTree = new TraceTree(opcode);
-        traceTree.addChild(trace1);
-        traceTree.addChild(trace2);
 
         BigInteger element0 = new BigInteger(traceableWord0.getBytes());
         BigInteger element1 = new BigInteger(traceableWord1.getBytes());
 
         BigInteger result = element0.subtract(element1);
 
-        TraceableWord traceableWord = new TraceableWord(result.toByteArray(), traceTree);
-        stack.push(traceableWord);
+        TraceableWord resultTraceableWord = new TraceableWord(result.toByteArray());
+        TraceTree traceTree = buildTraceTree(opcode, traceableWord0, traceableWord1, resultTraceableWord);
+        traceTree.addChild(trace1);
+        traceTree.addChild(trace2);
+        resultTraceableWord.setTrace(traceTree);
+        stack.push(resultTraceableWord);
     }
 }

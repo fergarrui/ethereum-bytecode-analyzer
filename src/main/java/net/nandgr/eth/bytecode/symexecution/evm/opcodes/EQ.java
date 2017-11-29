@@ -6,22 +6,15 @@ import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.exceptions.EVMException;
-
 import java.math.BigInteger;
 
-public class EQ implements OpcodeExecutor {
+public class EQ extends AbstractOpcode {
 
     @Override
     public void execute(EVMState state, Opcode opcode) throws EVMException {
         EVMStack stack = state.getStack();
         TraceableWord traceableWord0 = stack.pop();
         TraceableWord traceableWord1 = stack.pop();
-
-        TraceTree trace1 = traceableWord0.getTrace();
-        TraceTree trace2 = traceableWord1.getTrace();
-        TraceTree traceTree = new TraceTree(opcode);
-        traceTree.addChild(trace1);
-        traceTree.addChild(trace2);
 
         BigInteger element0 = new BigInteger(traceableWord0.getBytes());
         BigInteger element1 = new BigInteger(traceableWord1.getBytes());
@@ -30,7 +23,13 @@ public class EQ implements OpcodeExecutor {
         if (element0.compareTo(element1) == 0) {
             bytes[0] = 0x01;
         }
-        TraceableWord traceableWord = new TraceableWord(bytes, traceTree);
-        stack.push(traceableWord);
+
+        TraceableWord resultTraceableWord = new TraceableWord(bytes);
+        TraceTree traceTree = buildTraceTree(opcode, traceableWord0, traceableWord1, resultTraceableWord);
+        traceTree.addChild(traceableWord0.getTrace());
+        traceTree.addChild(traceableWord1.getTrace());
+        resultTraceableWord.setTrace(traceTree);
+
+        stack.push(resultTraceableWord);
     }
 }
