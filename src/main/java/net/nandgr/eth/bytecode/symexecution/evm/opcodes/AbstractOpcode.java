@@ -19,7 +19,7 @@ public abstract class AbstractOpcode implements OpcodeExecutor {
 
     protected static TraceTree buildTraceTree(Opcode opcode, TraceableWord result, List<TraceableWord> inputs) {
         List<SymbolicTransformation> symbolicTransformationsList = new ArrayList<>();
-        int numInputs = 0;
+        int numInputs = OpcodeUtils.isSymbolic(opcode.getOpcode()) ? 1 : 0;
         boolean isSymbolic = OpcodeUtils.isSymbolic(opcode.getOpcode());
         for (TraceableWord word : inputs) {
             ExecutionTrace executionTrace = word.getTrace().getExecutionTrace();
