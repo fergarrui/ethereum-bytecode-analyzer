@@ -8,12 +8,16 @@ import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.exceptions.EVMException;
 import net.nandgr.eth.utils.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractOpcode implements OpcodeExecutor {
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public abstract void execute(EVMState state, Opcode opcode) throws EVMException;
 
@@ -28,7 +32,7 @@ public abstract class AbstractOpcode implements OpcodeExecutor {
             numInputs += symbolicTransformation.getNumOfInputs();
             isSymbolic |= executionTrace.isSymbolic();
         }
-        SymbolicTransformation symbolicTransformation = new SymbolicTransformation(symbolicTransformationsList, opcode, numInputs);
+        SymbolicTransformation symbolicTransformation = new SymbolicTransformation(symbolicTransformationsList, opcode, numInputs, result);
         List<TraceableWord> outputs = result == null ? Collections.emptyList() : Lists.of(result);
         ExecutionTrace executionTrace = new ExecutionTrace(opcode, inputs, outputs, symbolicTransformation, isSymbolic);
         return new TraceTree(executionTrace);

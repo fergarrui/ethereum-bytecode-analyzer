@@ -94,7 +94,6 @@ public class SymbolicTests extends AbstractOpcodesTest {
                 new Opcode(0xd, Opcodes.STOP, null)
         );
 
-
         SymbolicPathsHandler symbolicPathsHandler = symPathFinder(new HashMap<Integer, BytecodeChunk>() {{
             put(0, chunk);
             put(0x99, chunk2);

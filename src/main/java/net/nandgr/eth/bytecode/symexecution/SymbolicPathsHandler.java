@@ -28,6 +28,7 @@ public class SymbolicPathsHandler implements Subscriber<Decision, EVMEnvironment
     private final DecisionProcessor decisionProcessor = new DecisionProcessor();
     private final DecisionsService decisionsService = new DecisionsService();
     private final Map<EVMEnvironment, SymExecutor> executions = new HashMap<>();
+    // TODO remove this property
     private final Map<EVMEnvironment, EVMState> executionsStates = new HashMap<>();
     private final AtomicInteger numberOfTasks = new AtomicInteger(0);
 
@@ -44,17 +45,7 @@ public class SymbolicPathsHandler implements Subscriber<Decision, EVMEnvironment
         if (defaultEnvironment == null) {
             defaultEnvironment = new EVMEnvironment.EVMEnvironmentBuilder().build();
         }
-        SymExecutor symExecutor = new SymExecutor(chunks, defaultEnvironment, decisionsService);
-        executions.put(defaultEnvironment, symExecutor);
-        Future<EVMState> submit = executorService.submit(symExecutor);
-        numberOfTasks.incrementAndGet();
-        try {
-            EVMState evmState = submit.get();
-            executionsStates.put(defaultEnvironment, evmState);
-            numberOfTasks.decrementAndGet();
-        } catch (ExecutionException | InterruptedException e) {
-            logger.error("Execution Interrupted" , e);
-        }
+        runEnvironment(defaultEnvironment);
     }
 
     @Override
@@ -62,31 +53,34 @@ public class SymbolicPathsHandler implements Subscriber<Decision, EVMEnvironment
         logger.info("New decision added : " + element.getConditionWord());
         EVMEnvironment evmEnvironment = decisionProcessor.buildEnvironmentFromDecision(element, environment);
         if (evmEnvironment != null && !executions.containsKey(evmEnvironment)) {
-            SymExecutor symExecutor = new SymExecutor(chunks, evmEnvironment, decisionsService);
-            executions.put(evmEnvironment, symExecutor);
-            Future<EVMState> submit = executorService.submit(symExecutor);
-            numberOfTasks.incrementAndGet();
-            try {
-                EVMState evmState = submit.get();
-                executionsStates.put(evmEnvironment, evmState);
-                numberOfTasks.decrementAndGet();
-            } catch (ExecutionException | InterruptedException e) {
-                logger.error("Execution Interrupted" , e);
-            }
+            runEnvironment(evmEnvironment);
         } else {
             logger.warn("Environment run already. Skipping." + evmEnvironment);
         }
     }
 
-    public boolean await() {
-        while (numberOfTasks.intValue() != 0) {
+    private void runEnvironment(EVMEnvironment evmEnvironment) {
+        SymExecutor symExecutor = new SymExecutor(chunks, evmEnvironment, decisionsService);
+        executions.put(evmEnvironment, symExecutor);
+        Future<EVMState> submit = executorService.submit(symExecutor);
+        numberOfTasks.incrementAndGet();
+        try {
+            EVMState evmState = submit.get();
+            executionsStates.put(evmEnvironment, evmState);
+            numberOfTasks.decrementAndGet();
+        } catch (ExecutionException | InterruptedException e) {
+            logger.error("Execution Interrupted" , e);
+        }
+    }
+
+    public void await() {
+        while (numberOfTasks.get() != 0) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 logger.error("Interrupted while checking if execution finished");
             }
         }
-        return true;
     }
 
     public Map<EVMEnvironment, EVMState> getExecutionsStates() {

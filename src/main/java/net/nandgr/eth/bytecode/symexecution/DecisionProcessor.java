@@ -16,7 +16,6 @@ class DecisionProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(DecisionProcessor.class);
     private static final Map<Opcodes, TraceAnalyzer> traceAnalyzers = new HashMap<>();
-    private static final List<Opcodes> opcodesInputs = new ArrayList<>();
 
     static {
         // TODO : Move to a factory class that instantiates the trace analyzers
