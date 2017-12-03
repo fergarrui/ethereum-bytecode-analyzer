@@ -12,7 +12,7 @@ import net.nandgr.eth.exceptions.EVMException;
 import java.util.Arrays;
 import java.util.Map;
 
-public class AbstractOpcodesTest {
+public class AbstractSymbolicTest {
 
     public static SymbolicPathsHandler symPathFinder(Map<Integer, BytecodeChunk> chunks) {
         return new SymbolicPathsHandler(chunks);

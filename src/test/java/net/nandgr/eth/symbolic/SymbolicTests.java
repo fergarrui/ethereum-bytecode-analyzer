@@ -1,6 +1,6 @@
 package net.nandgr.eth.symbolic;
 
-import net.nandgr.eth.AbstractOpcodesTest;
+import net.nandgr.eth.AbstractSymbolicTest;
 import net.nandgr.eth.Opcode;
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.beans.BytecodeChunk;
@@ -14,7 +14,7 @@ import org.junit.Test;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-public class SymbolicTests extends AbstractOpcodesTest {
+public class SymbolicTests extends AbstractSymbolicTest {
 
     @Test
     public void test_simple_decision() throws Exception {

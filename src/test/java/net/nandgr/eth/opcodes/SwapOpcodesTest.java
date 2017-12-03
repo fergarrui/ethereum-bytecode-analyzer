@@ -1,6 +1,6 @@
 package net.nandgr.eth.opcodes;
 
-import net.nandgr.eth.AbstractOpcodesTest;
+import net.nandgr.eth.AbstractSymbolicTest;
 import net.nandgr.eth.Opcode;
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.beans.BytecodeChunk;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SwapOpcodesTest extends AbstractOpcodesTest {
+public class SwapOpcodesTest extends AbstractSymbolicTest {
 
     @Test
     public void test_swap_1() throws Exception {

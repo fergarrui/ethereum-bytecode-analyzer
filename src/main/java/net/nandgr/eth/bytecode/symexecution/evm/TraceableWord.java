@@ -56,6 +56,10 @@ public class TraceableWord implements Traceable {
         return new BigInteger(bytes).intValue();
     }
 
+    public BigInteger getBigInteger() {
+        return new BigInteger(bytes);
+    }
+
     public void setBytes(byte[] bytes) {
         this.bytes = bytes;
     }

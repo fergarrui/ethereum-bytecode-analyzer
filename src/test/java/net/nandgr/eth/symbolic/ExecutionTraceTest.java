@@ -1,6 +1,6 @@
 package net.nandgr.eth.symbolic;
 
-import net.nandgr.eth.AbstractOpcodesTest;
+import net.nandgr.eth.AbstractSymbolicTest;
 import net.nandgr.eth.Opcode;
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.beans.BytecodeChunk;
@@ -11,14 +11,14 @@ import net.nandgr.eth.bytecode.symexecution.evm.EVMStack;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import org.junit.Test;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-public class ExecutionTraceTest extends AbstractOpcodesTest {
+import static org.junit.Assert.*;
+
+public class ExecutionTraceTest extends AbstractSymbolicTest {
 
     @Test
     public void test_static_trace_1() throws Exception {
