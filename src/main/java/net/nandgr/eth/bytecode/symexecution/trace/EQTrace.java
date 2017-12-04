@@ -72,7 +72,6 @@ public class EQTrace extends AbstractComparison {
             // TODO support more than 2 children in the transformations
             // TODO !!! heavy refactor !!!
             SymbolicTransformation tf0 = symbolicTransformation.getTransformations().get(0);
-            System.out.println("££" + symbolicTransformation.getOperation().getOpcode());
             SymbolicTransformation tf1 = symbolicTransformation.getTransformations().get(1);
             BigInteger constantInt;
             if (tf0.getNumOfInputs() == 0) {
@@ -86,9 +85,7 @@ public class EQTrace extends AbstractComparison {
                 opcodeSymbolic = tf0.getOperation().getOpcode();
                 symbolicTransformation = tf0;
             }
-            System.out.println("===> Revert: " + operation.getOpcode() + ", resultInt: " + resultInt + ", constant:" + constantInt);
             resultInt = findRevert(operation.getOpcode()).revert(resultInt, constantInt);
-            System.out.println("===> AFTER: " + resultInt);
         }
         return new ProcessChildResult(resultInt, opcodeSymbolic);
     }

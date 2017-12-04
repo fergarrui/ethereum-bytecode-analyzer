@@ -11,6 +11,7 @@ import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.bytecode.symexecution.trace.EQTrace;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;
 import java.math.BigInteger;
@@ -86,9 +87,39 @@ public class EQTraceTest extends AbstractSymbolicTest {
 
         EQTrace eqTrace = new EQTrace();
         EVMEnvironment environmentForTrace = eqTrace.createEnvironmentForTrace(trace);
-        System.out.println(environmentForTrace.getCallData());
         byte[] bytes = ArrayUtils.toPrimitive((Byte[]) environmentForTrace.getCallData().toArray());
         BigInteger callDataLoad = new BigInteger(bytes);
         Assert.assertEquals(BigInteger.valueOf(0x2), callDataLoad);
+    }
+
+    @Test
+    public void test_eq_trace_function_calls() throws Exception {
+
+        BytecodeChunk chunk = createChunk(0,
+                new Opcode(Opcodes.PUSH1, BigInteger.valueOf(0x0)),
+                new Opcode(Opcodes.CALLDATALOAD, null),
+                new Opcode(Opcodes.PUSH29, new BigInteger("100000000000000000000000000000000000000000000000000000000", 16)),
+                new Opcode(Opcodes.SWAP1, null),
+                new Opcode(Opcodes.DIV, null),
+                new Opcode(Opcodes.PUSH4, BigInteger.valueOf(0xffffffff)),
+                new Opcode(Opcodes.AND, null),
+                new Opcode(Opcodes.PUSH4, BigInteger.valueOf(0x3f7a0270)),
+                new Opcode(Opcodes.EQ, null),
+                new Opcode(Opcodes.STOP, null)
+        );
+
+        EVMState evmState = symExecute(new HashMap<Integer, BytecodeChunk>() {{
+            put(0, chunk);
+        }});
+        EVMStack stack = evmState.getStack();
+        TraceableWord word = stack.pop();
+        TraceTree trace = word.getTrace();
+
+        EQTrace eqTrace = new EQTrace();
+        EVMEnvironment environmentForTrace = eqTrace.createEnvironmentForTrace(trace);
+        System.out.println(environmentForTrace.getCallData().size());
+        byte[] bytes = ArrayUtils.toPrimitive((Byte[]) environmentForTrace.getCallData().toArray());
+        BigInteger callDataLoad = new BigInteger(bytes);
+        Assert.assertEquals(new BigInteger("3f7a027000000000000000000000000000000000000000000000000000000000", 16), callDataLoad);
     }
 }

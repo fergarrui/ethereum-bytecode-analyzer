@@ -20,6 +20,7 @@ public abstract class AbstractComparison implements TraceAnalyzer {
         operationRevertMap.put(Opcodes.DIV, new DivRevert());
         operationRevertMap.put(Opcodes.XOR, new XorRevert());
         operationRevertMap.put(Opcodes.NOT, new NotRevert());
+        operationRevertMap.put(Opcodes.AND, new AndRevert());
     }
 
     @Override

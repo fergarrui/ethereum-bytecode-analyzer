@@ -1,6 +1,5 @@
 package net.nandgr.eth.bytecode.symexecution;
 
-import net.nandgr.eth.Opcode;
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMEnvironment;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
@@ -8,9 +7,11 @@ import net.nandgr.eth.bytecode.symexecution.trace.EQTrace;
 import net.nandgr.eth.bytecode.symexecution.trace.IsZeroTrace;
 import net.nandgr.eth.bytecode.symexecution.trace.LTTrace;
 import net.nandgr.eth.bytecode.symexecution.trace.TraceAnalyzer;
+import net.nandgr.eth.exceptions.TraceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 class DecisionProcessor {
 
@@ -30,12 +31,16 @@ class DecisionProcessor {
         TraceableWord conditionWord = decision.getConditionWord();
         ExecutionTrace executionTrace = conditionWord.getTrace().getExecutionTrace();
         logger.info("Processing decision for " + conditionWord + ", " + executionTrace);
-        TraceAnalyzer traceAnalyzer = traceAnalyzers.get(executionTrace.getOpcode());
+        TraceAnalyzer traceAnalyzer = traceAnalyzers.get(executionTrace.getOpcode().getOpcode());
         if (traceAnalyzer == null) {
             logger.warn("Unknown condition opcode: " + executionTrace.getOpcode());
             return null;
         }
-        return new EVMEnvironment.EVMEnvironmentBuilder()
-                .build();
+        try {
+            return traceAnalyzer.createEnvironmentForTrace(decision.getConditionWord().getTrace());
+        } catch (TraceException e) {
+            logger.error("Error creating environment", e);
+        }
+        return null;
     }
 }
