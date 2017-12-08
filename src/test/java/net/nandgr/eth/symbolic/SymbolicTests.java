@@ -37,7 +37,7 @@ public class SymbolicTests extends AbstractSymbolicTest {
 
         BytecodeChunk chunk2 = createChunk(1,
             new Opcode(0x99, Opcodes.PUSH1, BigInteger.valueOf(0x100)),
-            new Opcode(0xa, Opcodes.STOP, null)
+            new Opcode(0x9a, Opcodes.STOP, null)
         );
 
         BytecodeChunk chunk3 = createChunk(2,

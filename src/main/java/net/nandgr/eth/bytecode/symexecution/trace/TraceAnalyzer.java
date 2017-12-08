@@ -5,5 +5,5 @@ import net.nandgr.eth.bytecode.symexecution.evm.EVMEnvironment;
 import net.nandgr.eth.exceptions.TraceException;
 
 public interface TraceAnalyzer {
-    EVMEnvironment createEnvironmentForTrace(TraceTree trace) throws TraceException;
+    EVMEnvironment createEnvironmentForTrace(TraceTree trace, EVMEnvironment environment) throws TraceException;
 }

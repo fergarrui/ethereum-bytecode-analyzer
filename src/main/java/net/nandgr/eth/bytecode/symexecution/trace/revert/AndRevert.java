@@ -8,10 +8,12 @@ public class AndRevert implements OperationRevert {
 
     @Override
     public BigInteger revert(BigInteger value, BigInteger constantInt) throws TraceException {
-        if(constantInt.not().equals(BigInteger.ZERO)) {
-            return value;
-        }
-        String message = "Cannot revert AND for value=" + Hex.encodeHexString(value.toByteArray()) + " and constant=" + Hex.encodeHexString(constantInt.toByteArray());
-        throw new TraceException(message);
+        // TODO FIX
+        return value;
+//        if(constantInt.not().equals(BigInteger.ZERO)) {
+//            return value;
+//        }
+//        String message = "Cannot revert AND for value=" + Hex.encodeHexString(value.toByteArray()) + " and constant=" + Hex.encodeHexString(constantInt.toByteArray());
+//        throw new TraceException(message);
     }
 }

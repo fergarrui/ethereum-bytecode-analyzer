@@ -1,27 +1,28 @@
-package net.nandgr.eth.bytecode.symexecution.trace;
+package net.nandgr.eth.bytecode.symexecution.trace.comparisons;
 
 import net.nandgr.eth.Opcode;
 import net.nandgr.eth.Opcodes;
+import net.nandgr.eth.bytecode.symexecution.ExecutionTrace;
 import net.nandgr.eth.bytecode.symexecution.SymbolicTransformation;
 import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMEnvironment;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.bytecode.symexecution.evm.opcodes.OpcodeUtils;
-import net.nandgr.eth.bytecode.symexecution.trace.comparisons.AbstractComparison;
+import net.nandgr.eth.bytecode.symexecution.trace.AbstractAnalyzer;
+import net.nandgr.eth.bytecode.symexecution.trace.ProcessChildResult;
 import net.nandgr.eth.exceptions.TraceException;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.math.BigInteger;
 import java.util.List;
 
-public class EQTrace extends AbstractComparison {
+public abstract class AbstractComparisonAnalyzer extends AbstractAnalyzer {
 
-    private static final Logger logger = LoggerFactory.getLogger(EQTrace.class);
+    private final Logger logger = LoggerFactory.getLogger(EQTraceAnalyzer.class);
 
     @Override
-    public EVMEnvironment createEnvironmentForTrace(TraceTree trace) throws TraceException {
+    public EVMEnvironment createEnvironmentForTrace(TraceTree trace, EVMEnvironment environment) throws TraceException {
         List<TraceTree> children = trace.getChildren();
 
         // TODO - move to parent class
@@ -33,8 +34,10 @@ public class EQTrace extends AbstractComparison {
         TraceTree children0 = children.get(0);
         TraceTree children1 = children.get(1);
 
-        boolean isChildren0Symbolic = children0.getExecutionTrace().isSymbolic();
-        boolean isChildren1Symbolic = children1.getExecutionTrace().isSymbolic();
+        ExecutionTrace executionTrace0 = children0.getExecutionTrace();
+        ExecutionTrace executionTrace1 = children1.getExecutionTrace();
+        boolean isChildren0Symbolic = executionTrace0.isSymbolic();
+        boolean isChildren1Symbolic = executionTrace1.isSymbolic();
 
         if (isChildren0Symbolic && isChildren1Symbolic) {
             String errorMessage = "Decision has 2 symbolic children. Cannot be solved at the moment";
@@ -42,19 +45,18 @@ public class EQTrace extends AbstractComparison {
             throw new TraceException(errorMessage);
         }
         ProcessChildResult result;
+        List<TraceableWord> output;
         if (isChildren0Symbolic) {
-             result = processChild(children0, children1);
+            output = children1.getExecutionTrace().getOutput();
+            result = processChild(children0, children1);
         } else {
+            output = children0.getExecutionTrace().getOutput();
             result = processChild(children1, children0);
         }
         // TODO -
         Opcodes resultSymbolicOperation = result.getOpcode();
         logger.info("Solved word is: 0x" + Hex.encodeHexString(result.getResult().toByteArray()) + ", for symbol: "+ resultSymbolicOperation);
-        EVMEnvironment.EVMEnvironmentBuilder builder = new EVMEnvironment.EVMEnvironmentBuilder();
-        if (resultSymbolicOperation.equals(Opcodes.CALLDATALOAD)) {
-            builder.setCallData(result.getResult().toByteArray());
-        }
-        return builder.build();
+        return createEVMEnvironmentForResult(result, output, environment);
     }
 
     private ProcessChildResult processChild(TraceTree symbolicChild, TraceTree constantChild) throws TraceException {
@@ -66,7 +68,7 @@ public class EQTrace extends AbstractComparison {
         BigInteger resultInt = outputWord.getBigInteger();
         SymbolicTransformation symbolicTransformation = symbolicChild.getExecutionTrace().getSymbolicTransformation();
         List<SymbolicTransformation> transformations = symbolicTransformation.getTransformations();
-        Opcodes opcodeSymbolic = Opcodes.UNKNOWN;
+        Opcodes opcodeSymbolic = symbolicTransformation.getOperation().getOpcode();
         while (!transformations.isEmpty() && !OpcodeUtils.isSymbolic(symbolicTransformation.getOperation().getOpcode())) {
             Opcode operation = symbolicTransformation.getOperation();
             // TODO support more than 2 children in the transformations
@@ -89,4 +91,6 @@ public class EQTrace extends AbstractComparison {
         }
         return new ProcessChildResult(resultInt, opcodeSymbolic);
     }
+
+    protected abstract EVMEnvironment createEVMEnvironmentForResult(ProcessChildResult result, List<TraceableWord> output, EVMEnvironment environment) throws TraceException;
 }

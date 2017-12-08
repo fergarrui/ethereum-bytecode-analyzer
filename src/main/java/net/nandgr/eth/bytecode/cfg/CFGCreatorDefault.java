@@ -5,13 +5,20 @@ import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.beans.BytecodeChunk;
 import net.nandgr.eth.bytecode.beans.BytecodeSection;
 import net.nandgr.eth.bytecode.beans.ContractBytecode;
+import net.nandgr.eth.diagram.DotDiagram;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CFGCreatorDefault implements CFGCreator {
+
+    private static final Logger logger = LoggerFactory.getLogger(CFGCreatorDefault.class);
 
     private final static List<Opcodes> endChunkOpcodes = Stream.of(
             Opcodes.JUMPI,
@@ -39,6 +46,8 @@ public class CFGCreatorDefault implements CFGCreator {
                 createRelations(functionsChunks);
                 BytecodeSection constructorSection = new BytecodeSection(constructorChunks);
                 BytecodeSection functionsSection = new BytecodeSection(functionsChunks);
+                logger.debug("Constructor graph: " + DotDiagram.buildDotFormat(constructorSection.getChunks()));
+                logger.debug("Functions graph: " + DotDiagram.buildDotFormat(functionsSection.getChunks()));
                 return new ContractBytecode(constructorSection, functionsSection);
             }
         }

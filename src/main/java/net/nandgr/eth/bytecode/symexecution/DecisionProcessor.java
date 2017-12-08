@@ -3,9 +3,9 @@ package net.nandgr.eth.bytecode.symexecution;
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMEnvironment;
 import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
-import net.nandgr.eth.bytecode.symexecution.trace.EQTrace;
+import net.nandgr.eth.bytecode.symexecution.trace.comparisons.EQTraceAnalyzer;
 import net.nandgr.eth.bytecode.symexecution.trace.IsZeroTrace;
-import net.nandgr.eth.bytecode.symexecution.trace.LTTrace;
+import net.nandgr.eth.bytecode.symexecution.trace.comparisons.LTTraceAnalyzer;
 import net.nandgr.eth.bytecode.symexecution.trace.TraceAnalyzer;
 import net.nandgr.eth.exceptions.TraceException;
 import org.slf4j.Logger;
@@ -23,8 +23,8 @@ class DecisionProcessor {
         // TODO : instead of caching all of them here.
         // Analyzers
         traceAnalyzers.put(Opcodes.ISZERO, new IsZeroTrace());
-        traceAnalyzers.put(Opcodes.LT, new LTTrace());
-        traceAnalyzers.put(Opcodes.EQ, new EQTrace());
+        traceAnalyzers.put(Opcodes.LT, new LTTraceAnalyzer());
+        traceAnalyzers.put(Opcodes.EQ, new EQTraceAnalyzer());
     }
 
     EVMEnvironment buildEnvironmentFromDecision(Decision decision, EVMEnvironment environment) {
@@ -37,7 +37,7 @@ class DecisionProcessor {
             return null;
         }
         try {
-            return traceAnalyzer.createEnvironmentForTrace(decision.getConditionWord().getTrace());
+            return traceAnalyzer.createEnvironmentForTrace(decision.getConditionWord().getTrace(), environment);
         } catch (TraceException e) {
             logger.error("Error creating environment", e);
         }

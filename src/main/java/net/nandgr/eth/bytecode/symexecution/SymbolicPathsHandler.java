@@ -55,7 +55,7 @@ public class SymbolicPathsHandler implements Subscriber<Decision, EVMEnvironment
         if (evmEnvironment != null && !executions.containsKey(evmEnvironment)) {
             runEnvironment(evmEnvironment);
         } else {
-            logger.warn("Environment run already. Skipping." + evmEnvironment);
+            logger.warn("Environment run already or failed. Skipping." + evmEnvironment);
         }
     }
 

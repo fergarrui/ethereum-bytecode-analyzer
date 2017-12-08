@@ -6,7 +6,7 @@ import net.nandgr.eth.exceptions.TraceException;
 
 public class IsZeroTrace implements TraceAnalyzer {
     @Override
-    public EVMEnvironment createEnvironmentForTrace(TraceTree trace) throws TraceException {
+    public EVMEnvironment createEnvironmentForTrace(TraceTree trace, EVMEnvironment environment) throws TraceException {
         return null;
     }
 }

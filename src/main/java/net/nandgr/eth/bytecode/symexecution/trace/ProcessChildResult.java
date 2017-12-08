@@ -3,11 +3,11 @@ package net.nandgr.eth.bytecode.symexecution.trace;
 import net.nandgr.eth.Opcodes;
 import java.math.BigInteger;
 
-class ProcessChildResult {
+public class ProcessChildResult {
     private final BigInteger result;
     private final Opcodes opcode;
 
-    ProcessChildResult(BigInteger result, Opcodes opcode) {
+    public ProcessChildResult(BigInteger result, Opcodes opcode) {
         this.result = result;
         this.opcode = opcode;
     }

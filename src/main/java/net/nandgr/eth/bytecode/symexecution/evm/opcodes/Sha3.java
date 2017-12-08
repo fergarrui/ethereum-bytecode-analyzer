@@ -8,7 +8,6 @@ import net.nandgr.eth.bytecode.symexecution.evm.TraceableWord;
 import net.nandgr.eth.ethereumjcrypto.HashUtil;
 import net.nandgr.eth.exceptions.EVMException;
 import net.nandgr.eth.utils.Lists;
-
 import java.util.Map;
 
 public class Sha3 extends AbstractOpcode {

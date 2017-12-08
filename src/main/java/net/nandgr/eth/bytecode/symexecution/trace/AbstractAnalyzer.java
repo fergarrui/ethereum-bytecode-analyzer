@@ -1,15 +1,14 @@
-package net.nandgr.eth.bytecode.symexecution.trace.comparisons;
+package net.nandgr.eth.bytecode.symexecution.trace;
 
 import net.nandgr.eth.Opcodes;
 import net.nandgr.eth.bytecode.symexecution.TraceTree;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMEnvironment;
-import net.nandgr.eth.bytecode.symexecution.trace.TraceAnalyzer;
 import net.nandgr.eth.bytecode.symexecution.trace.revert.*;
 import net.nandgr.eth.exceptions.TraceException;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractComparison implements TraceAnalyzer {
+public abstract class AbstractAnalyzer implements TraceAnalyzer {
 
     private static Map<Opcodes, OperationRevert> operationRevertMap = new HashMap<>();
 
@@ -24,7 +23,7 @@ public abstract class AbstractComparison implements TraceAnalyzer {
     }
 
     @Override
-    public abstract EVMEnvironment createEnvironmentForTrace(TraceTree trace) throws TraceException;
+    public abstract EVMEnvironment createEnvironmentForTrace(TraceTree trace, EVMEnvironment environment) throws TraceException;
 
     protected static OperationRevert findRevert(Opcodes opcode) throws TraceException {
         if (!operationRevertMap.containsKey(opcode)) {

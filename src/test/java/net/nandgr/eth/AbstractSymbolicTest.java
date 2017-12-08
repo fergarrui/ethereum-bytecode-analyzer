@@ -33,4 +33,8 @@ public class AbstractSymbolicTest {
         chunk.setOpcodes(Arrays.asList(op));
         return chunk;
     }
+
+    public static EVMEnvironment createDefaultEnvironment() {
+        return new EVMEnvironmentBuilder().build();
+    }
 }
