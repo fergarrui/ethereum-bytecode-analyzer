@@ -8,6 +8,7 @@ import net.nandgr.eth.bytecode.symexecution.SymbolicPathsHandler;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMEnvironment;
 import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.diagram.DotDiagram;
+import net.nandgr.eth.exceptions.GraphException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Map;
@@ -38,8 +39,12 @@ public class Main {
             logger.info("=-=-=- STATE: " + state.printEVMState());
             logger.debug("Generating graph for environment... " + environment.toString());
             // generate diagrams
-            String diagram = DotDiagram.buildDotFormat(state.getChunks());
-            logger.debug(diagram);
+            try {
+                DotDiagram.buildDotFile(chunks, "graph", "svg");
+            } catch (GraphException e) {
+                // TODO -
+                e.printStackTrace();
+            }
         }
     }
 }

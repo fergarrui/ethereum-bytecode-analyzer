@@ -46,8 +46,6 @@ public class CFGCreatorDefault implements CFGCreator {
                 createRelations(functionsChunks);
                 BytecodeSection constructorSection = new BytecodeSection(constructorChunks);
                 BytecodeSection functionsSection = new BytecodeSection(functionsChunks);
-                logger.debug("Constructor graph: " + DotDiagram.buildDotFormat(constructorSection.getChunks()));
-                logger.debug("Functions graph: " + DotDiagram.buildDotFormat(functionsSection.getChunks()));
                 return new ContractBytecode(constructorSection, functionsSection);
             }
         }
