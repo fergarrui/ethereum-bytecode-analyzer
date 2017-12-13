@@ -1,5 +1,8 @@
 package net.nandgr.eth.bytecode.symexecution.evm;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +32,11 @@ public class EVMEnvironment {
                 "callData=" + callData +
                 ", callValue=" + callValue +
                 '}';
+    }
+
+    public String getCallDataHex() {
+        byte[] bytes = ArrayUtils.toPrimitive(callData.toArray(new Byte[callData.size()]));
+        return Hex.encodeHexString(bytes);
     }
 
     @Override

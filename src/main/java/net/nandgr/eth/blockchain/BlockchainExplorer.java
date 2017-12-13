@@ -1,6 +1,5 @@
 package net.nandgr.eth.blockchain;
 
-import net.nandgr.eth.ContractAnalyzer;
 import net.nandgr.eth.Parameters;
 import net.nandgr.eth.exceptions.BlockNotFoundException;
 import org.slf4j.Logger;
@@ -31,7 +30,7 @@ public class BlockchainExplorer {
             try {
                 contractAddressesFromBlock = blockchainService.getContractAddressesFromBlock(i);
                 contractAddressesFromBlock.stream().forEach(address -> {
-                    executorService.execute(new ContractAnalyzer(blockchainService, address, blockNum));
+                    executorService.execute(new BlockchainContractAnalyzer(blockchainService, address, blockNum));
                 });
             } catch (BlockNotFoundException e) {
                 logger.error("BlockNotFound", e);

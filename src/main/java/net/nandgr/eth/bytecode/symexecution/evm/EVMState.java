@@ -4,8 +4,8 @@ import net.nandgr.eth.bytecode.beans.BytecodeChunk;
 import net.nandgr.eth.bytecode.symexecution.DecisionsService;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public class EVMState {
 
@@ -13,13 +13,30 @@ public class EVMState {
     private boolean isRunning = true;
     // This program counter just points to the chunk offset being executed
     private int pc = 0;
-    private final EVMStack stack = new EVMStack();
-    private final EVMMemory memory = new EVMMemory();
-    private final EVMStorage storage = new EVMStorage();
+    private final EVMStack stack;
+    private final EVMMemory memory;
+    private final EVMStorage storage;
     private final EVMEnvironment evmEnvironment;
     private final DecisionsService decisionsService;
 
+    /**
+     * This constructor should only be used for cloning
+     * (deep copy for reports/filtering)
+     * @param state
+     */
+    public EVMState(EVMState state) {
+        chunks = null;
+        evmEnvironment = null;
+        this.decisionsService = null;
+        this.stack = new EVMStack(state.getStack());
+        this.memory = new EVMMemory(state.getMemory());
+        this.storage = new EVMStorage(state.getStorage());
+    }
+
     public EVMState(Map<Integer, BytecodeChunk> chunks, EVMEnvironment evmEnvironment, DecisionsService decisionsService) {
+        this.stack = new EVMStack();
+        this.memory = new EVMMemory();
+        this.storage = new EVMStorage();
         this.chunks = chunks;
         this.evmEnvironment = evmEnvironment;
         this.decisionsService = decisionsService;
@@ -76,9 +93,9 @@ public class EVMState {
     public String printEVMState() {
         StringBuilder sb = new StringBuilder(System.lineSeparator());
         sb.append("Inputs:").append(System.lineSeparator());
-        List<Byte> callData = evmEnvironment.getCallData();
-        byte[] bytes = ArrayUtils.toPrimitive(callData.toArray(new Byte[callData.size()]));
-        sb.append("\tCallData: ").append(Hex.encodeHexString(bytes)).append(System.lineSeparator());
+        if (evmEnvironment != null) {
+            sb.append("\tCallData: ").append(evmEnvironment.getCallDataHex()).append(System.lineSeparator());
+        }
 
         sb.append("Program Counter: ").append(pc).append(System.lineSeparator());
         sb.append("# Stack: ").append(stack.printStack()).append(System.lineSeparator());

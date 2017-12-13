@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body>
+<div id="graph"></div>
+    <style>
+        #graph {
+            width: 90%;
+            height: 500px;
+            border: 1px solid lightgray;
+            margin: auto;
+        }
+    </style>
+    <script>
+        var nodes = new vis.DataSet($nodes);
+        var edges = new vis.DataSet($edges);
+
+        var container = document.getElementById("graph");
+        var data = {
+            nodes : nodes,
+            edges : edges
+        };
+        var options = {
+            layout: {
+                hierarchical: {
+                    enabled:true,
+                    nodeSpacing: 300,
+                    levelSeparation: 300,
+                    parentCentralization: true,
+                    sortMethod: 'directed',
+                    direction: 'UD',
+            }
+        },
+        physics: {
+            enabled: false
+        }
+    };
+	var graph = new vis.Network(container, data, options);
+</script>
+
+
+<div class="container">
+    <ul class="nav nav-tabs">
+    #foreach( $execution in $executions.entrySet())
+        <li role="presentation" class="active"><a data-toggle="tab" href="#exec$foreach.index">Exec $foreach.index</a></li>
+    #end
+    </ul>
+    <div class="tab-content">
+    #foreach( $execution in $executions.entrySet())
+        <div id="exec$foreach.index" class="tab-pane fade in active">
+        <h3>For Environment:</h3>
+        <p>CallData: $execution.key.getCallDataHex()</p>
+        <p>CallValue: $execution.key.getCallValue()</p>
+            <h3>Execution:</h3>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Opcode</th>
+                        <th>EVM State</th>
+                    </tr>
+                </thead>
+            #foreach($programExecution in $execution.value.getProgramExecution().entrySet())
+                <tr>
+                    <td>
+                        $programExecution.key.toString()
+                    </td>
+                    <td>
+                        <h5>Stack:</h5>
+                        #foreach ($stack in $programExecution.value.getStack().getStack())
+                            <p>$stack.toString()</p>
+                        #end
+                    </td>
+                </tr>
+            #end
+            </table>
+        </div>
+    #end
+    </div>
+</div>
+</body>
+</html>

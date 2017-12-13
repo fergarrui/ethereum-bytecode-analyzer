@@ -2,6 +2,7 @@ package net.nandgr.eth.diagram;
 
 import net.nandgr.eth.Opcode;
 import net.nandgr.eth.bytecode.beans.BytecodeChunk;
+import net.nandgr.eth.bytecode.symexecution.evm.EVMState;
 import net.nandgr.eth.exceptions.GraphException;
 import net.nandgr.eth.utils.Lists;
 import org.slf4j.Logger;
@@ -21,8 +22,8 @@ public class DotDiagram {
     private static final Logger logger = LoggerFactory.getLogger(DotDiagram.class);
     private static final List<String> supportedFormats = Lists.of("png", "svg");
 
-    public static void buildDotFile(Map<Integer, BytecodeChunk> chunks, String fileName, String format) throws GraphException {
-        String s = buildDotFormat(chunks);
+    public static void buildDotFile(Map<Integer, BytecodeChunk> chunks, Map<Opcode, EVMState> executions, String fileName, String format) throws GraphException {
+        String s = buildDotFormat(chunks, executions);
         String dotFilename = fileName + ".dot";
         try {
             Files.write(Paths.get(dotFilename), s.getBytes());
@@ -32,7 +33,7 @@ public class DotDiagram {
         convertDotTo(dotFilename, format);
     }
 
-    private static String buildDotFormat(Map<Integer, BytecodeChunk> chunks) {
+    private static String buildDotFormat(Map<Integer, BytecodeChunk> chunks, Map<Opcode, EVMState> executions) {
         StringBuilder sb = new StringBuilder("digraph {").append(System.lineSeparator());
         sb.append("node [shape=box];").append(System.lineSeparator());
         for (BytecodeChunk chunk : chunks.values()) {

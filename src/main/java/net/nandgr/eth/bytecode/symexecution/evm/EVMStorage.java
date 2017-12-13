@@ -1,13 +1,22 @@
 package net.nandgr.eth.bytecode.symexecution.evm;
 
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.ArrayUtils;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EVMStorage {
 
     private final Map<TraceableWord, TraceableWord> storage = new HashMap<>();
+
+    public EVMStorage() {
+    }
+
+    public EVMStorage(EVMStorage storage) {
+        this.storage.putAll(storage.getStorage());
+    }
+
+    public Map<TraceableWord, TraceableWord> getStorage() {
+        return storage;
+    }
 
     public TraceableWord put(TraceableWord key, TraceableWord value) {
         return storage.put(key, value);

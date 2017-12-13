@@ -9,9 +9,8 @@ import net.nandgr.eth.bytecode.symexecution.evm.opcodes.OpcodeExecutors;
 import net.nandgr.eth.exceptions.EVMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -33,8 +32,9 @@ public class SymExecutor implements Callable<EVMState> {
      * Maybe some paths of the program won't be covered on this
      * execution but are going to be covered in subsequents runs
      * with different inputs/environment
+     * LinkedHashMap because insertion order matters when iterating over it
      */
-    private final List<Opcode> programExecution = new ArrayList<>();
+    private final Map<Opcode, EVMState> programExecution = new LinkedHashMap<>();
 
     public SymExecutor(Map<Integer, BytecodeChunk> chunks, EVMEnvironment evmEnvironment, DecisionsService decisionsService) {
         state = new EVMState(chunks, evmEnvironment, decisionsService);
@@ -44,7 +44,7 @@ public class SymExecutor implements Callable<EVMState> {
         return state;
     }
 
-    public List<Opcode> getProgramExecution() {
+    public Map<Opcode, EVMState> getProgramExecution() {
         return programExecution;
     }
 
@@ -77,7 +77,7 @@ public class SymExecutor implements Callable<EVMState> {
             for (Opcode opcode : bytecodeChunk.getOpcodes()) {
                 OpcodeExecutor executor = OpcodeExecutors.findExecutor(opcode);
                 executor.execute(state, opcode);
-                programExecution.add(opcode);
+                programExecution.put(opcode, new EVMState(state));
                 logger.info("Executed opcode {} with {}", opcode, executor.getClass());
                 logger.debug("EVM State: {}", state.printEVMState());
             }

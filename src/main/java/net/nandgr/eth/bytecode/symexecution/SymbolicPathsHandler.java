@@ -83,6 +83,10 @@ public class SymbolicPathsHandler implements Subscriber<Decision, EVMEnvironment
         }
     }
 
+    public Map<EVMEnvironment, SymExecutor> getExecutions() {
+        return executions;
+    }
+
     public Map<EVMEnvironment, EVMState> getExecutionsStates() {
         return executionsStates;
     }

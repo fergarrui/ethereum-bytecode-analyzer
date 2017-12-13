@@ -7,6 +7,13 @@ public class EVMMemory {
 
     private final Map<Integer, TraceableWord> memory = new HashMap<>();
 
+    public EVMMemory() {
+    }
+
+    public EVMMemory(EVMMemory evmMemory) {
+        this.memory.putAll(evmMemory.getMemory());
+    }
+
     public String printMemory() {
         StringBuilder sb = new StringBuilder(System.lineSeparator()).append("********************").append(System.lineSeparator());
         for (Map.Entry<Integer, TraceableWord> wordEntry : memory.entrySet()) {

@@ -6,6 +6,13 @@ public class EVMStack {
 
     private final Stack<TraceableWord> stack = new Stack<>();
 
+    public EVMStack() {
+    }
+
+    public EVMStack(EVMStack stack) {
+        this.stack.addAll(stack.getStack());
+    }
+
     public TraceableWord push(TraceableWord item) {
         return stack.push(item);
     }
@@ -28,6 +35,10 @@ public class EVMStack {
 
     public TraceableWord remove(int index) {
         return stack.remove(index);
+    }
+
+    public Stack<TraceableWord> getStack() {
+        return stack;
     }
 
     public String printStack() {
