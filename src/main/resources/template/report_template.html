@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
@@ -49,12 +50,20 @@
 <div class="container">
     <ul class="nav nav-tabs">
     #foreach( $execution in $executions.entrySet())
-        <li role="presentation" class="active"><a data-toggle="tab" href="#exec$foreach.index">Exec $foreach.index</a></li>
+        <li role="presentation"
+            #if ($foreach.index == 0)
+                class="active"
+            #end
+        ><a data-toggle="tab" href="#exec$foreach.index">Exec $foreach.index</a></li>
     #end
     </ul>
     <div class="tab-content">
     #foreach( $execution in $executions.entrySet())
-        <div id="exec$foreach.index" class="tab-pane fade in active">
+        <div id="exec$foreach.index" class="tab-pane fade
+        #if ($foreach.index == 0)
+            in active
+        #end
+        ">
         <h3>For Environment:</h3>
         <p>CallData: $execution.key.getCallDataHex()</p>
         <p>CallValue: $execution.key.getCallValue()</p>
